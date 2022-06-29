@@ -16,3 +16,9 @@ export default {
   }),
 };
 </script>
+
+<style>
+  :root {
+    --primary-color: #e41c38;
+  }
+</style>
