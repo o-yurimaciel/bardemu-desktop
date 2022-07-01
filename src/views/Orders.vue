@@ -28,7 +28,7 @@
             <th>Pagamento</th>
             <th>Valor</th>
           </tr>
-          <tbody v-for="(order) in orders" :key="order._id">
+          <tbody @click="openOrder(order)" v-for="(order) in orders" :key="order._id">
             <tr>
               <td>{{new Date(order.createdAt).toLocaleDateString()}}</td>
               <td>{{formatHour(order.createdAt)}}</td>
@@ -50,7 +50,8 @@ const orderHistoryStatusOptions = Object.freeze({
   PENDING: 'PENDING',
   CONFIRMED: 'CONFIRMED',
   OUT_FOR_DELIVERY: 'OUT_FOR_DELIVERY',
-  DELIVERED: 'DELIVERED'
+  DELIVERED: 'DELIVERED',
+  CANCELLED: 'CANCELLED'
 })
 
 import { bardemu } from '../services'
@@ -91,8 +92,13 @@ export default {
           return "Saiu p/ entrega"
         case orderHistoryStatusOptions.DELIVERED:
           return "Entregue"
+        case orderHistoryStatusOptions.CANCELLED:
+          return "Cancelado"
       }
     },
+    openOrder(order) {
+      this.$router.push(`/order/${order._id}`)
+    }
   }
 }
 </script>

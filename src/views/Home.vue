@@ -28,7 +28,7 @@ export default {
         { title: "Pedidos", color: "var(--primary-color)", icon: "mdi-basket", route: '/orders' },
         { title: "Produtos", color: "grey", icon: "mdi-food", route: '/products' },
         { title: "Categorias", color: "#708090", icon: "mdi-format-list-bulleted-square", route: '/categories' },
-        { title: "Configurações", color: "#8B0000", icon: "mdi-cog", route: '/configs' },
+        { title: "Configurações", color: "#8B0000", icon: "mdi-cog", route: '/' },
       ]
     }
   },
