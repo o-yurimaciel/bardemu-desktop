@@ -62,8 +62,8 @@ export default {
       },
       oldName: "",
       items: [
-        { text: 'Home', href: '/' },
-        { text: 'Categorias', href: '/categories' }
+        { text: 'Home', to: '/' },
+        { text: 'Categorias', to: '/categories' }
       ]
     }
   },

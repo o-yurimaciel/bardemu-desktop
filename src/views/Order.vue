@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-container fluid class="pa-0 ma-0 wrapper">
     <v-col class="pa-0 d-flex flex-column flex-grow-0 pt-10 pb-10">
       <v-col offset="1" class="pa-0">
         <v-breadcrumbs
@@ -20,7 +20,7 @@
         </span>
       </v-col>
       <v-col class="pa-0 d-flex justify-center">
-        <a>https://www.bardemu.com.br/pedido/{{order._id}}</a>
+        <a @click="openWeb">https://www.bardemu.com.br/pedido/{{order._id}}</a>
       </v-col>
       <v-col lg="6" cols="12" class="pa-0 mx-auto pt-10">
         <v-timeline
@@ -151,7 +151,7 @@
         </v-expansion-panels>
       </v-col>
     </v-col>
-  </v-app>
+  </v-container>
 </template>
 
 <script>
@@ -169,8 +169,8 @@ export default {
   data() {
     return {
       breadCrumbs: [
-        { text: 'Home', href: '/' },
-        { text: 'Pedidos', href: '/orders' }
+        { text: 'Home', to: '/' },
+        { text: 'Pedidos', to: '/orders' }
       ],
       order: {},
       details: [],
@@ -189,6 +189,10 @@ export default {
     this.getOrder(this.$router.history.current.params.id)
   },
   methods: {
+    openWeb() {
+      const { shell } = require('electron')
+      shell.openExternal(`https://www.bardemu.com.br/pedido/${this.order._id}`)
+    },
     getOrder(id) {
       bardemu.get('/order', {
         params: {

@@ -1,7 +1,9 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, Tray, Menu } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
+import './logConfig'
+import path from 'path'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 let isSingleInstance = app.requestSingleInstanceLock()
@@ -16,6 +18,7 @@ protocol.registerSchemesAsPrivileged([
 ])
 
 let win
+let tray = null
 
 async function createWindow() {
   // Create the browser window.
@@ -33,6 +36,7 @@ async function createWindow() {
     },
     title: 'BarDeMu Lanches'
   })
+  win.removeMenu()
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -89,6 +93,65 @@ app.on('ready', async () => {
   //   }
   // }
   createWindow()
+
+  tray = new Tray(path.join(__dirname, '../build/app-tray-icon.png'))
+
+  let contextMenu;
+
+  if(isDevelopment) {
+    contextMenu = Menu.buildFromTemplate([
+      { label: "Abrir", type: "normal", click: () => {
+        win.focus();
+      }},
+      { label: "Reload", type: "normal", click: () => {
+        win.reload()
+      }},
+      { label: "Abrir DevTools", type: "normal", click: () => {
+        win.webContents.openDevTools()
+      }},
+      { label: "Redefinir Tela", type: "normal", click: () => {
+        win.setSize(1200, 800)
+      }},
+      { label: "Ver logs", type: "normal", click: () => {
+        if(isDevelopment) {
+          shell.openPath(path.join(app.getAppPath(), '../logs'));
+        } else {
+          shell.openPath(path.join(app.getAppPath(), '../../../logs'));
+        }
+      }},
+      { label: "Fechar", type: "normal", click: () => {
+        win.closable = true
+        win.close()
+      }}
+    ])
+  } else {
+    contextMenu = Menu.buildFromTemplate([
+      { label: "Abrir", type: "normal", click: () => {
+        win.focus();
+      }},
+      { label: "Pedidos", type: "normal", click: () => {
+        win.webContents.send('router-redirect', '/orders');
+        win.focus();
+      }},
+      { label: "Ver logs", type: "normal", click: () => {
+        if(isDevelopment) {
+          shell.openPath(path.join(app.getAppPath(), '../logs'));
+        } else {
+          shell.openPath(path.join(app.getAppPath(), '../../../logs'));
+        }
+      }},
+      { label: "Verificar Atualização", type: "normal", click: () => {
+        autoUpdater.checkForUpdates()
+      }},
+      { label: "Fechar", type: "normal", click: () => {
+        win.closable = true
+        win.close()
+      }}
+    ])
+  }
+
+  tray.setToolTip('BarDeMu Lanches')
+  tray.setContextMenu(contextMenu)
 })
 
 // Exit cleanly on request from parent process in development mode.

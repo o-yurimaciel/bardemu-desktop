@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-0 ma-0">
+  <v-app class="wrapper">
     <v-col offset="1" cols="10" class="pa-0 pt-10">
       <v-row no-gutters class="d-flex justify-space-between">
         <v-col cols="12" class="pa-0 d-flex flex-column">
@@ -7,10 +7,18 @@
             class="pa-0"
             :items="items"
             divider="/"
-          ></v-breadcrumbs>
-          <h1>Produtos</h1>
+          >
+            <template v-slot:item="{ item }">
+              <v-breadcrumbs-item style="cursor: pointer" :to="item.to">
+                <span class="bread-item" style="color: #fff">
+                  {{ item.text }}
+                </span>
+              </v-breadcrumbs-item>
+            </template>
+          </v-breadcrumbs>
+          <h1 style="color: #fff">Produtos</h1>
         </v-col>
-        <v-col class="pa-0 d-flex justify-end pt-lg-0 pt-15">
+        <v-col class="pa-0 d-flex justify-end pt-lg-0">
           <v-btn 
           color="green"
           class="text-capitalize"
@@ -21,7 +29,7 @@
       </v-row>
       <v-col class="pa-0 pt-10">
         <v-row no-gutters>
-          <v-col cols="12" lg="3" class="pa-0 pa-2" v-for="product in products" :key="product._id">
+          <v-col cols="4" lg="3" class="pa-0 pa-2" v-for="product in products" :key="product._id">
             <v-card
               class="mx-auto"
               min-width="200"
@@ -31,6 +39,7 @@
             >
               <v-img
                 height="200"
+                style="object-fit: contain"
                 :src="product.image ? product.image : 'https://fermello.com.br/wp-content/themes/consultix/images/no-image-found-360x260.png'"
               ></v-img>
 
@@ -66,7 +75,7 @@
         </v-row>
       </v-col>
     </v-col>
-  </v-container>
+  </v-app>
 </template>
 
 <script>
@@ -77,7 +86,7 @@ export default {
     return {
       products: [],
       items: [
-        { text: 'Home', href: '/' }
+        { text: 'Home', to: '/' }
       ]
     }
   },
@@ -130,5 +139,14 @@ export default {
 </script>
 
 <style>
+h1 {
+  font-size: 3em;
+  text-shadow: 1px 1px 2px black;
+}
 
+.wrapper {
+  background: url('https://img.freepik.com/fotos-gratis/vista-lateral-de-batatas-fritas-com-tempero_141793-4899.jpg?w=2000')!important;
+  background-size: cover!important;
+  background-repeat: no-repeat;
+}
 </style>

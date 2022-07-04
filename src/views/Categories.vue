@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-0 ma-0">
+  <v-container fluid class="pa-0 ma-0 wrapper">
     <v-col offset="1" cols="10" class="pa-0 d-flex justify-center flex-column mx-auto pt-10">
       <v-row no-gutters>
         <v-col cols="12" class="pa-0 d-flex flex-column">
@@ -7,10 +7,18 @@
             class="pa-0"
             :items="items"
             divider="/"
-          ></v-breadcrumbs>
-          <h1>Categorias</h1>
+          >
+            <template v-slot:item="{ item }">
+              <v-breadcrumbs-item style="cursor: pointer" :to="item.to">
+                <span class="bread-item" style="color: #fff">
+                  {{ item.text }}
+                </span>
+              </v-breadcrumbs-item>
+            </template>
+          </v-breadcrumbs>
+          <h1 style="color: #fff">Categorias</h1>
         </v-col>
-        <v-col class="pa-0 d-flex justify-end pt-lg-0 pt-15">
+        <v-col class="pa-0 d-flex justify-end pt-lg-0">
           <v-btn 
           color="green"
           class="text-capitalize"
@@ -61,7 +69,7 @@ import { bardemu } from '../services'
     data: () => ({
       categories:[],
       items: [
-        { text: 'Home', href: '/' }
+        { text: 'Home', to: '/' }
       ]
     }),
     mounted() {
@@ -127,11 +135,23 @@ table tr {
 }
 
 table tbody {
+  background-color: #fff;
   cursor: pointer;
   margin: 10px;
 }
 
 table tbody:hover {
   background-color: #cecece;
+}
+
+h1 {
+  font-size: 3em;
+  text-shadow: 1px 1px 2px black;
+}
+
+.wrapper {
+  background: url('https://images.alphacoders.com/276/276653.jpg')!important;
+  background-size: cover!important;
+  background-repeat: no-repeat;
 }
 </style>

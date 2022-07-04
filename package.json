@@ -1,7 +1,10 @@
 {
   "name": "bardemu-desktop",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "private": true,
+  "author": {
+    "name": "BarDeMu"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -21,7 +24,9 @@
     "v-mask": "^2.3.0",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
-    "vuetify": "^2.6.0"
+    "vuetify": "^2.6.0",
+    "winston": "^3.8.1",
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.12",

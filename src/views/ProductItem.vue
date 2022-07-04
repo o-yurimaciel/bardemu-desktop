@@ -125,8 +125,8 @@ export default {
       },
       oldName: "",
       items: [
-        { text: 'Home', href: '/' },
-        { text: 'Produtos', href: '/products' },
+        { text: 'Home', to: '/' },
+        { text: 'Produtos', to: '/products' },
       ]
     }
   },
