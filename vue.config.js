@@ -7,6 +7,13 @@ module.exports = {
       nodeIntegration: true,
       builderOptions: {
         productName: "BarDeMu Lanches",
+        publish: {
+          provider: 'github',
+          private: true,
+          owner: "yrimaciel",
+          repo: "bardemu-desktop",
+          token: "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"
+        },
         win: {
           icon: './build/app-icon.png'
         },

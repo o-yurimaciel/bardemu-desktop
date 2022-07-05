@@ -5,6 +5,7 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import './logConfig'
 import path from 'path'
 const isDevelopment = process.env.NODE_ENV !== 'production'
+import { autoUpdater } from 'electron-updater'
 
 let isSingleInstance = app.requestSingleInstanceLock()
 
@@ -93,6 +94,8 @@ app.on('ready', async () => {
   //   }
   // }
   createWindow()
+
+  autoUpdater.checkForUpdatesAndNotify()
 
   tray = new Tray(path.join(__dirname, '../build/app-tray-icon.png'))
 
