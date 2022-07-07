@@ -1,8 +1,8 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, Tray, Menu } from 'electron'
+import { app, protocol, BrowserWindow, Tray, Menu, shell } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-import { log } from './logConfig'
+import log from './logConfig'
 import path from 'path'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 import { autoUpdater } from 'electron-updater'
@@ -107,7 +107,7 @@ app.on('ready', async () => {
 
   let contextMenu;
 
-  if(isDevelopment) {
+  if(!isDevelopment) {
     contextMenu = Menu.buildFromTemplate([
       { label: "Abrir", type: "normal", click: () => {
         win.focus();
