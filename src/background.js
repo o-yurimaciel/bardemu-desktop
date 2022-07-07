@@ -2,10 +2,16 @@
 
 import { app, protocol, BrowserWindow, Tray, Menu } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-import './logConfig'
+import { log } from './logConfig'
 import path from 'path'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 import { autoUpdater } from 'electron-updater'
+
+autoUpdater.logger = log
+autoUpdater.autoInstallOnAppQuit = false
+autoUpdater.autoDownload = false
+autoUpdater.allowDowngrade = false
+autoUpdater.channel = "latest"
 
 let isSingleInstance = app.requestSingleInstanceLock()
 
@@ -95,8 +101,6 @@ app.on('ready', async () => {
   // }
   createWindow()
 
-  autoUpdater.checkForUpdatesAndNotify()
-
   tray = new Tray(path.join(__dirname, '../build/app-tray-icon.png'))
 
   let contextMenu;
@@ -155,6 +159,54 @@ app.on('ready', async () => {
 
   tray.setToolTip('BarDeMu Lanches')
   tray.setContextMenu(contextMenu)
+})
+
+autoUpdater.on('update-available', (info) => {
+  const dialogOpts = {
+    type: "none",
+    icon: path.join(__dirname, '../build/app-tray-icon.png'),
+    buttons: [
+      'Sim', 'Não'
+    ],
+    title: 'Atualização BarDeMu Lanches',
+    detail: `Nova versão v${info.version} está disponível. Deseja baixar agora?`
+  }
+  
+  dialog.showMessageBox(dialogOpts).then((res) => {
+    if (res && res.response == 0) {
+      autoUpdater.downloadUpdate()
+    }
+  })
+});
+
+autoUpdater.on('update-downloaded', () => {
+  const dialogOpts = {
+    type: "none",
+    icon: path.join(__dirname, '../build/app-tray-icon.png'),
+    buttons: [
+      'Reiniciar Agora', 'Reiniciar mais tarde'
+    ],
+    title: 'Atualização',
+    detail: "Uma nova versão foi recebida, reinicie para instalar a atualização."
+  }
+  
+  setTimeout(() => {
+    win.setTitle(`BarDeMu Lanhes - Reinicie para instalar a atualização`)
+    dialog.showMessageBox(dialogOpts).then((res) => {
+      if (res && res.response == 0) {
+        autoUpdater.quitAndInstall(false, true);
+      }
+    })
+  }, 1000);
+});
+
+autoUpdater.on('download-progress', (obj) => {
+  let percent;
+
+  if(obj.percent) {
+    percent = obj.percent.toString().split('.')[0] + "%"
+    win.setTitle(`BarDeMu Lanches - Baixando atualização... ${percent}`)
+  }
 })
 
 // Exit cleanly on request from parent process in development mode.
