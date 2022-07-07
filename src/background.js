@@ -101,6 +101,8 @@ app.on('ready', async () => {
   // }
   createWindow()
 
+  autoUpdater.checkForUpdates()
+
   tray = new Tray(path.join(__dirname, '../build/app-tray-icon.png'))
 
   let contextMenu;
