@@ -28,7 +28,10 @@ module.exports = {
         },
         electronDownload: {
           isVerifyChecksum: false
-        }
+        },
+        extraResources: [
+          './build/app-tray-icon.png'
+        ]
       }
     }
   }
