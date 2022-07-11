@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-0 ma-0 wrapper">
+  <v-container fluid class="pa-0 ma-0">
     <v-col class="pa-0 d-flex flex-column flex-grow-0 pt-10 pb-10">
       <v-col offset="1" class="pa-0">
         <v-breadcrumbs
@@ -22,7 +22,7 @@
       <v-col class="pa-0 d-flex justify-center">
         <a @click="openWeb">https://www.bardemu.com.br/pedido/{{order._id}}</a>
       </v-col>
-      <v-col lg="6" cols="12" class="pa-0 mx-auto pt-10">
+      <v-col lg="6" cols="10" class="pa-0 mx-auto pt-10">
         <v-timeline
           reverse
         >

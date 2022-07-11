@@ -6,6 +6,8 @@ import log from './logConfig'
 import path from 'path'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 import { autoUpdater } from 'electron-updater'
+const { version } = require('../package.json')
+import './native/ipcEvents'
 
 autoUpdater.logger = log
 autoUpdater.autoInstallOnAppQuit = false
@@ -32,7 +34,7 @@ async function createWindow() {
   win = new BrowserWindow({
     width: 1200,
     height: 800,
-    show: true,
+    show: false,
     center: false,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
@@ -41,27 +43,22 @@ async function createWindow() {
       contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
       webSecurity: false
     },
-    title: 'BarDeMu Lanches'
+    title: `BarDeMu Lanches ${version}`
   })
   win.removeMenu()
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-    if (!process.env.IS_TEST) win.webContents.openDevTools()
+    if(isDevelopment) {
+      win.webContents.openDevTools()
+    }
   } else {
     createProtocol('app')
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
-  
-  win.webContents.on('did-finish-load', () => {
-    console.log("Up!");
-    win.setTitle("BarDeMu Lanches")
-    win.show()
-  })
 }
-
 
 app.on('second-instance', () => {
   if(win) {
@@ -91,76 +88,69 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  // if (isDevelopment && !process.env.IS_TEST) {
-  //   // Install Vue Devtools
-  //   try {
-  //     await installExtension(VUEJS_DEVTOOLS)
-  //   } catch (e) {
-  //     console.error('Vue Devtools failed to install:', e.toString())
-  //   }
-  // }
-  createWindow()
-
-  autoUpdater.checkForUpdates()
-
-  tray = new Tray(path.join(__dirname, '../build/app-tray-icon.png'))
-
-  let contextMenu;
-
-  if(!isDevelopment) {
-    contextMenu = Menu.buildFromTemplate([
-      { label: "Abrir", type: "normal", click: () => {
-        win.focus();
-      }},
-      { label: "Reload", type: "normal", click: () => {
-        win.reload()
-      }},
-      { label: "Abrir DevTools", type: "normal", click: () => {
-        win.webContents.openDevTools()
-      }},
-      { label: "Redefinir Tela", type: "normal", click: () => {
-        win.setSize(1200, 800)
-      }},
-      { label: "Ver logs", type: "normal", click: () => {
-        if(isDevelopment) {
-          shell.openPath(path.join(app.getAppPath(), '../logs'));
-        } else {
-          shell.openPath(path.join(app.getAppPath(), '../../../logs'));
-        }
-      }},
-      { label: "Fechar", type: "normal", click: () => {
-        win.closable = true
-        win.close()
-      }}
-    ])
-  } else {
-    contextMenu = Menu.buildFromTemplate([
-      { label: "Abrir", type: "normal", click: () => {
-        win.focus();
-      }},
-      { label: "Pedidos", type: "normal", click: () => {
-        win.webContents.send('router-redirect', '/orders');
-        win.focus();
-      }},
-      { label: "Ver logs", type: "normal", click: () => {
-        if(isDevelopment) {
-          shell.openPath(path.join(app.getAppPath(), '../logs'));
-        } else {
-          shell.openPath(path.join(app.getAppPath(), '../../../logs'));
-        }
-      }},
-      { label: "Verificar Atualização", type: "normal", click: () => {
-        autoUpdater.checkForUpdates()
-      }},
-      { label: "Fechar", type: "normal", click: () => {
-        win.closable = true
-        win.close()
-      }}
-    ])
-  }
-
-  tray.setToolTip('BarDeMu Lanches')
-  tray.setContextMenu(contextMenu)
+  createWindow().then(() => {
+    win.show()
+    autoUpdater.checkForUpdates()
+    win.setTitle(`BarDeMu Lanches ${version}`)
+    tray = new Tray(path.join(__dirname, '../build/app-tray-icon.png'))
+  
+    let contextMenu;
+  
+    if(isDevelopment) {
+      contextMenu = Menu.buildFromTemplate([
+        { label: "Abrir", type: "normal", click: () => {
+          win.focus();
+        }},
+        { label: "Reload", type: "normal", click: () => {
+          win.reload()
+        }},
+        { label: "Abrir DevTools", type: "normal", click: () => {
+          win.webContents.openDevTools()
+        }},
+        { label: "Redefinir Tela", type: "normal", click: () => {
+          win.setSize(1200, 800)
+        }},
+        { label: "Ver logs", type: "normal", click: () => {
+          if(isDevelopment) {
+            shell.openPath(path.join(app.getAppPath(), '../logs'));
+          } else {
+            shell.openPath(path.join(app.getAppPath(), '../../../logs'));
+          }
+        }},
+        { label: "Fechar", type: "normal", click: () => {
+          win.closable = true
+          win.close()
+        }}
+      ])
+    } else {
+      contextMenu = Menu.buildFromTemplate([
+        { label: "Abrir", type: "normal", click: () => {
+          win.focus();
+        }},
+        { label: "Pedidos", type: "normal", click: () => {
+          win.webContents.send('router-redirect', '/orders');
+          win.focus();
+        }},
+        { label: "Ver logs", type: "normal", click: () => {
+          if(isDevelopment) {
+            shell.openPath(path.join(app.getAppPath(), '../logs'));
+          } else {
+            shell.openPath(path.join(app.getAppPath(), '../../../logs'));
+          }
+        }},
+        { label: "Verificar Atualização", type: "normal", click: () => {
+          autoUpdater.checkForUpdates()
+        }},
+        { label: "Fechar", type: "normal", click: () => {
+          win.closable = true
+          win.close()
+        }}
+      ])
+    }
+  
+    tray.setToolTip('BarDeMu Lanches')
+    tray.setContextMenu(contextMenu)
+  })
 })
 
 autoUpdater.on('update-available', (info) => {

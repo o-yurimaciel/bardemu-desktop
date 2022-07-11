@@ -2,19 +2,39 @@
   <v-app>
     <v-main>
       <router-view/>
+      <OrderAlert 
+      v-if="openDialogOrders" 
+      :orders="newestOrders" 
+      :closeDialog="closeDialog" />
     </v-main>
   </v-app>
 </template>
 
 <script>
+import OrderAlert from './components/orderAlert.vue'
+import { EventBus } from './EventBus'
 
 export default {
-  
   name: 'App',
-
   data: () => ({
-    //
+    openDialogOrders: false,
+    newestOrders: []
   }),
+  components: {
+    OrderAlert
+  },
+  mounted() {
+    EventBus.$on('new-order', (order) => {
+      this.openDialogOrders = true
+      this.newestOrders.push(order)
+    })
+  },
+  methods: {
+    closeDialog() {
+      this.openDialogOrders = false
+      this.newestOrders = []
+    }
+  }
 };
 </script>
 

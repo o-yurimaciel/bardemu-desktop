@@ -7,6 +7,7 @@ import './plugins/currency-field'
 import './plugins/v-mask'
 import log from './logConfig'
 import { ipcRenderer } from 'electron'
+import { EventBus } from './EventBus'
 
 Vue.config.productionTip = false
 
@@ -27,3 +28,11 @@ ipcRenderer.on('router-redirect', (event, route) => {
     router.push(route)
   }
 })
+
+ipcRenderer.send('ws-kill')
+ipcRenderer.send('ws')
+
+ipcRenderer.on('ws-reply', (event, msg) => {
+  console.log('ws', msg)
+  EventBus.$emit('new-order', msg)
+}).setMaxListeners(0)

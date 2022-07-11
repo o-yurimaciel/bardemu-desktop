@@ -20,6 +20,7 @@
 </template>
 
 <script>
+// import { ipcRenderer } from 'electron'
 
 export default {
   name: 'Home',
@@ -33,11 +34,15 @@ export default {
       ]
     }
   },
+  mounted() {
+    // ipcRenderer.send('ws-kill')
+    // ipcRenderer.send('ws')
+  },
   methods: {
     goTo(route) {
       this.$router.push(route)
     }
-  }
+  },
 }
 </script>
 

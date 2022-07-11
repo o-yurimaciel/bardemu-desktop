@@ -55,6 +55,7 @@ const orderHistoryStatusOptions = Object.freeze({
 })
 
 import { bardemu } from '../services'
+
 export default {
   data() {
     return {
