@@ -12,7 +12,7 @@ ipcMain.on('ws', (event) => {
     child = fork(path.join(process.resourcesPath, "src/native/websocket.js"))
   }
 
-  child.send({})
+  child.send(process.env.WS_SERVER)
 
   child.on('message', (msg) => {
     event.reply('ws-reply', msg)  

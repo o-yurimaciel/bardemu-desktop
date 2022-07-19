@@ -1,8 +1,7 @@
 const WebSocket = require('ws')
 
-process.on('message', () => {
-  // const ws = new WebSocket("wss://bardemu-backend.herokuapp.com/")
-  const ws = new WebSocket("ws://localhost:5050")
+process.on('message', (webSocketServer) => {
+  const ws = new WebSocket(webSocketServer)
 
   ws.onmessage = (event) => {
     process.stdout.write('\033c');
