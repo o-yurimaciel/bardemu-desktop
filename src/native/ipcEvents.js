@@ -2,6 +2,7 @@ const { ipcMain } = require('electron')
 const isDev = process.env.NODE_ENV !== "production"
 const { fork } = require('child_process')
 const path = require('path')
+const log = require('../logConfig')
 
 ipcMain.on('ws', (event) => {
   let child
@@ -12,7 +13,11 @@ ipcMain.on('ws', (event) => {
     child = fork(path.join(process.resourcesPath, "src/native/websocket.js"))
   }
 
-  child.send(process.env.WS_SERVER)
+  const wsServer = process.env.WS_SERVER
+
+  log.info(`WS-SERVER: ${wsServer}`)
+
+  child.send(wsServer)
 
   child.on('message', (msg) => {
     event.reply('ws-reply', msg)  

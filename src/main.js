@@ -36,3 +36,23 @@ ipcRenderer.on('ws-reply', (event, msg) => {
   ipcRenderer.send('notification')
   EventBus.$emit('new-order', msg)
 }).setMaxListeners(0)
+
+process.on('uncaughtException', (err) => {
+  log.error(`[MAIN-PROCESS] uncaughtException ${err}`)
+})
+
+process.on('unhandledRejection', (err) => {
+  log.error(`[MAIN-PROCESS] unhandledRejection ${err}`)
+})
+
+process.on('uncaughtExceptionMonitor', (err) => {
+  log.error(`[MAIN-PROCESS] uncaughtExceptionMonitor ${err}`)
+})
+
+process.on('exit', function(code) {
+  log.error(`[MAIN-PROCESS] exit ${code}`)
+});
+
+process.on('error', function(err) {
+  log.error(`[MAIN-PROCESS] error ${JSON.stringify(err)}`)
+});

@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, Tray, Menu, shell, ipcMain, Notification, dialog} from 'electron'
+import { app, protocol, BrowserWindow, Tray, Menu, shell, ipcMain, Notification, dialog } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import log from './logConfig'
 import path from 'path'
@@ -187,14 +187,12 @@ autoUpdater.on('update-downloaded', () => {
     detail: "Uma nova versão foi recebida, reinicie para instalar a atualização."
   }
   
-  setTimeout(() => {
-    win.setTitle(`BarDeMu Lanhes - Reinicie para instalar a atualização`)
-    dialog.showMessageBox(dialogOpts).then((res) => {
-      if (res && res.response == 0) {
-        autoUpdater.quitAndInstall(false, true);
-      }
-    })
-  }, 1000);
+  win.setTitle(`BarDeMu Lanhes - Reinicie para instalar a atualização`)
+  dialog.showMessageBox(dialogOpts).then((res) => {
+    if (res && res.response == 0) {
+      autoUpdater.quitAndInstall(false, true);
+    }
+  })
 });
 
 autoUpdater.on('download-progress', (obj) => {
