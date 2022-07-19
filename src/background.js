@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, Tray, Menu, shell } from 'electron'
+import { app, protocol, BrowserWindow, Tray, Menu, shell, ipcMain, Notification, dialog} from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import log from './logConfig'
 import path from 'path'
@@ -19,6 +19,10 @@ let isSingleInstance = app.requestSingleInstanceLock()
 
 if(!isSingleInstance) {
   app.quit()
+}
+
+if (process.platform === 'win32') {
+  app.setAppUserModelId(app.name);
 }
 
 // Scheme must be registered before the app is ready
@@ -41,6 +45,7 @@ async function createWindow() {
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
+      enableRemoteModule: true,
       webSecurity: false
     },
     title: `BarDeMu Lanches ${version}`
@@ -199,6 +204,21 @@ autoUpdater.on('download-progress', (obj) => {
     percent = obj.percent.toString().split('.')[0] + "%"
     win.setTitle(`BarDeMu Lanches - Baixando atualização... ${percent}`)
   }
+})
+
+ipcMain.on('notification', () => {
+  let notify = new Notification({
+    title: "Um novo pedido foi recebido.",
+    body: "Clique para mais detalhes",
+    icon: path.join(__dirname, '../build/app-tray-icon.png'),
+    urgency: 'critical'
+  })
+  notify.show()
+  notify.on('click', () => {
+    win.alwaysOnTop = true
+    win.show()
+    win.alwaysOnTop = false
+  })
 })
 
 // Exit cleanly on request from parent process in development mode.

@@ -7,19 +7,37 @@
   >
     <v-card
     height="300px"
-    class="elevation-1"
+    class="elevation-1 d-flex align-center"
     rounded
     >
-      <v-col class="pa-0 d-flex flex-column pa-3">
+      <v-col class="pa-0 d-flex flex-column justify-center pa-3">
         <v-col class="pa-0 d-flex justify-center">
           <span style="fontSize: 30px">{{orders.length > 1 ? `${orders.length} novos pedidos!` : "Novo pedido!"}}</span>
         </v-col>
-        <v-col class="pa-0 d-flex justify-center pt-15">
-          <v-btn @click="goToOrder(orders[0]._id)" v-if="orders.length < 2">
-            Ir para pedido
+        <v-col class="pa-0 d-flex justify-center pt-5">
+          <v-btn 
+          rounded
+          class="text-capitalize"
+          color="var(--primary-color)"
+          @click="goToOrder(orders[0]._id)" 
+          v-if="orders.length < 2">
+            <v-icon
+            color="#fff"
+            class="mr-2"
+            >mdi-arrow-right-circle</v-icon>
+            <span style="color: #fff">Pedido</span>
           </v-btn>
-          <v-btn v-else @click="goToOrders">
-            Ir para pedidos
+          <v-btn
+          rounded
+          class="text-capitalize"
+          color="var(--primary-color)"
+          v-else 
+          @click="goToOrders">
+            <v-icon
+            color="#fff"
+            class="mr-2"
+            >mdi-arrow-right-circle</v-icon>
+            <span style="color: #fff">Pedidos</span>
           </v-btn>
         </v-col>
       </v-col>
@@ -36,6 +54,11 @@ export default {
   data() {
     return {
       dialog: true
+    }
+  },
+  watch: {
+    orders() {
+      console.log('orders change')
     }
   },
   methods: {

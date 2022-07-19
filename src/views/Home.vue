@@ -11,8 +11,8 @@
         tile
         @click="goTo(menu.route)"
         >
-          <v-icon size="200" color="#fff">{{menu.icon}}</v-icon>
-          <h1 style="color: #fff">{{menu.title}}</h1>
+          <v-icon size="150" color="#fff">{{menu.icon}}</v-icon>
+          <span class="menu-title">{{menu.title}}</span>
         </v-card>
       </v-col>
     </v-row>
@@ -20,8 +20,6 @@
 </template>
 
 <script>
-// import { ipcRenderer } from 'electron'
-
 export default {
   name: 'Home',
   data() {
@@ -33,10 +31,6 @@ export default {
         { title: "Configurações", color: "yellow", icon: "mdi-cog", src: 'http://i.mlcdn.com.br/portaldalu/fotosconteudo/43225.jpg',route: '/' },
       ]
     }
-  },
-  mounted() {
-    // ipcRenderer.send('ws-kill')
-    // ipcRenderer.send('ws')
   },
   methods: {
     goTo(route) {
@@ -58,5 +52,14 @@ export default {
 
 .borders:nth-child(3) {
   border-right: 6px solid #fff;
+}
+
+.menu-title {
+  color: #fff;
+  font-family: 'Kaushan Script', sans-serif;
+  letter-spacing: 4px;
+  font-weight: bold;
+  font-size: 2.5em;
+  text-shadow: 1px 1px 3px black!important;
 }
 </style>

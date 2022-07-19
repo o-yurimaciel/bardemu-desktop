@@ -33,6 +33,6 @@ ipcRenderer.send('ws-kill')
 ipcRenderer.send('ws')
 
 ipcRenderer.on('ws-reply', (event, msg) => {
-  console.log('ws', msg)
+  ipcRenderer.send('notification')
   EventBus.$emit('new-order', msg)
 }).setMaxListeners(0)

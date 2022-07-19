@@ -16,7 +16,7 @@
               </v-breadcrumbs-item>
             </template>
           </v-breadcrumbs>
-          <h1 style="color: #fff">Produtos</h1>
+          <span class="page-title">Produtos</span>
         </v-col>
         <v-col class="pa-0 d-flex justify-end pt-lg-0">
           <v-btn 
@@ -42,9 +42,7 @@
                 style="object-fit: contain"
                 :src="product.image ? product.image : 'https://fermello.com.br/wp-content/themes/consultix/images/no-image-found-360x260.png'"
               ></v-img>
-
               <v-card-title>{{product.name}}</v-card-title>
-
               <v-card-text>
                 <div>
                   <span class="product-description" style="fontSize: 1em" v-if="product.description">
@@ -63,7 +61,7 @@
               <v-btn
                 color="red"
                 style="position: absolute;top:5px;right:5px;z-index: 100"
-                @click="deleteProduct(product)"
+                @click="deleteProduct(product, product.name)"
                 title="Excluir produto"
               >
                 <v-icon style="color: #fff">
@@ -80,13 +78,13 @@
 
 <script>
 import { bardemu } from '../services'
-
+import { remote } from 'electron'
 export default {
   data() {
     return {
       products: [],
       items: [
-        { text: 'Home', to: '/' }
+        { text: 'Home', to: '/', icon: 'mdi-home' }
       ]
     }
   },
@@ -102,25 +100,38 @@ export default {
         name: 'product-item'
       })
     },
-    deleteProduct(product) {
-      bardemu.delete('/product', {
-        data: {
-          _id: product._id
+    deleteProduct(product, name) {
+      const dialogOpts = {
+          type: "question",
+          buttons: [
+            'Sim', 'Não'
+          ],
+          title: 'Remover produto',
+          detail: `Tem certeza que deseja remover o produto "${name}"?`
         }
-      }).then((res) => {
-        console.log(res)
-        this.getProductList()
-        this.$store.dispatch('openAlert', {
-          message: 'Produto removido',
-          type: 'success'
+
+        remote.dialog.showMessageBox(dialogOpts).then((res) => {
+          if (res && res.response == 0) {
+            bardemu.delete('/product', {
+              data: {
+                _id: product._id
+              }
+            }).then((res) => {
+              console.log(res)
+              this.getProductList()
+              this.$store.dispatch('openAlert', {
+                message: 'Produto removido',
+                type: 'success'
+              })
+            }).catch((e) => {
+              console.log(e)
+              this.$store.dispatch('openAlert', {
+                message: 'Erro ao remover Produto',
+                type: 'error'
+              })
+            })
+          }
         })
-      }).catch((e) => {
-        console.log(e)
-        this.$store.dispatch('openAlert', {
-          message: 'Erro ao deletar Produto',
-          type: 'error'
-        })
-      })
     },
     getProductList() {
       bardemu.get('/products').then((res) => {
@@ -148,5 +159,14 @@ h1 {
   background: url('https://img.freepik.com/fotos-gratis/vista-lateral-de-batatas-fritas-com-tempero_141793-4899.jpg?w=2000')!important;
   background-size: cover!important;
   background-repeat: no-repeat;
+}
+
+.page-title {
+  color: #fff;
+  font-family: 'Kaushan Script', sans-serif;
+  letter-spacing: 4px;
+  font-weight: bold;
+  font-size: 3.5em;
+  text-shadow: 1px 1px 3px black!important;
 }
 </style>

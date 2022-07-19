@@ -44,6 +44,10 @@ export default {
     --primary-color: #e41c38;
   }
 
+  html {
+    background-color: #fff;
+  }
+
   .product-title {
     font-family: 'Roboto', sans-serif;
     font-size: 1.4em;
@@ -68,7 +72,6 @@ export default {
   .bread-item {
     font-size: 1.3em;
     text-shadow: 1px 1px 1px black;
-    text-decoration: underline;
   }
 
   .wrapper {

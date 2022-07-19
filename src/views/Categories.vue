@@ -16,7 +16,7 @@
               </v-breadcrumbs-item>
             </template>
           </v-breadcrumbs>
-          <h1 style="color: #fff">Categorias</h1>
+          <span class="page-title">Categorias</span>
         </v-col>
         <v-col class="pa-0 d-flex justify-end pt-lg-0">
           <v-btn 
@@ -50,7 +50,7 @@
                 <v-btn
                 color="red"
                 small
-                @click="deleteCategory(category._id)"
+                @click="deleteCategory(category._id, category.name)"
                 >
                   <v-icon color="#fff">mdi-delete</v-icon>
                 </v-btn>
@@ -65,6 +65,7 @@
 
 <script>
 import { bardemu } from '../services'
+import { remote } from 'electron'
   export default {
     data: () => ({
       categories:[],
@@ -90,16 +91,37 @@ import { bardemu } from '../services'
           name: 'category-item'
         })
       },
-      deleteCategory(id) {
-        bardemu.delete('/category', {
-          data: {
-            _id: id
+      deleteCategory(id, name) {
+        const dialogOpts = {
+          type: "question",
+          buttons: [
+            'Sim', 'Não'
+          ],
+          title: 'Remover categoria',
+          detail: `Tem certeza que deseja remover a categoria "${name}"?`
+        }
+
+        remote.dialog.showMessageBox(dialogOpts).then((res) => {
+          if (res && res.response == 0) {
+            bardemu.delete('/category', {
+              data: {
+                _id: id
+              }
+            }).then((res) => {
+              console.log(res)
+              this.$store.dispatch('openAlert', {
+                message: 'Categoria removida',
+                type: 'success'
+              })
+              this.getCategories()
+            }).catch((e) => {
+              console.log(e.response)
+              this.$store.dispatch('openAlert', {
+                message: 'Erro ao remover Categoria',
+                type: 'error'
+              })
+            })
           }
-        }).then((res) => {
-          console.log(res)
-          this.getCategories()
-        }).catch((e) => {
-          console.log(e.response)
         })
       },
       editCategory(id) {
@@ -153,5 +175,14 @@ h1 {
   background: url('https://images.alphacoders.com/276/276653.jpg')!important;
   background-size: cover!important;
   background-repeat: no-repeat;
+}
+
+.page-title {
+  color: #fff;
+  font-family: 'Kaushan Script', sans-serif;
+  letter-spacing: 4px;
+  font-weight: bold;
+  font-size: 3.5em;
+  text-shadow: 1px 1px 3px black!important;
 }
 </style>

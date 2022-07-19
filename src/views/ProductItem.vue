@@ -1,108 +1,123 @@
 <template>
-  <v-container fluid class="pa-0 ma-0">
+  <v-container fluid class="pa-0 ma-0 wrapper">
     <v-col offset="1" cols="10" class="pa-0 pt-10 d-flex flex-column">
       <v-breadcrumbs
         class="pa-0"
         :items="items"
         divider="/"
-      ></v-breadcrumbs>
-      <h1>
+      >
+        <template v-slot:item="{ item }">
+          <v-breadcrumbs-item style="cursor: pointer" :to="item.to">
+            <span class="bread-item" style="color: #fff">
+              {{ item.text }}
+            </span>
+          </v-breadcrumbs-item>
+        </template>
+      </v-breadcrumbs>
+      <span class="page-title">
         {{edit ? `Editar Produto "${oldName}"` : 'Criar Produto' }}
-      </h1>
-      <v-row no-gutters class="pt-15 d-flex justify-center">
-        <v-col lg="7" cols="10" class="pa-0">
-          <v-form v-model="isFormValid" @submit.prevent>
-            <v-col class="pa-0">
-              <label for="category">Categoria</label>
-              <v-select
-              outlined
-              :items="categories"
-              rounded
-              :value="product.category"
-              v-model="product.category"
-              id="category"
-              >
-              </v-select>
-            </v-col>
-            <v-col class="pa-0">
-              <label for="name">Nome</label>
-              <v-text-field
-              outlined
-              rounded
-              v-model="product.name"
-              id="name"
-              >
-              </v-text-field>
-            </v-col>
-            <v-col class="pa-0">
-              <label for="name">Descrição</label>
-              <v-text-field
-              outlined
-              rounded
-              v-model="product.description"
-              id="description"
-              >
-              </v-text-field>
-            </v-col>
-            <v-col class="pa-0">
-              <label for="name">Preço</label>
-              <v-currency-field
-              v-model="product.price"
-              outlined
-              rounded
-              id="description"
-              >
-              </v-currency-field>
-            </v-col>
-            <v-col class="pa-0">
-              <label for="name">Foto</label>
-              <v-file-input
-                truncate-length="15"
-                @change="changeFile"
-              ></v-file-input>
-            </v-col>
-            <v-col class="pa-0 d-flex justify-center pt-5">
-              <v-btn
-              color="green"
-              :outlined="false"
-              @click="edit? updateProduct() : createProduct()"
-              >
-                <span style="color: #fff">{{edit ? 'Atualizar' : 'Criar'}}</span>
-              </v-btn>
-            </v-col>
-          </v-form>
-        </v-col>
-        <v-col cols="10" lg="5" class="pa-0 d-flex flex-grow-0 justify-center pt-lg-0 pt-10">
-            <v-card
-              class="mx-auto"
-              min-width="400"
-              max-width="400"
-              max-height="400"
-              min-height="400"
-            >
-              <v-img
-                height="200"
+      </span>
+    </v-col>
+    <v-col class="pa-0 pt-15 pb-15 d-flex justify-center">
+      <v-card 
+      width="70%"
+      class="elevation-3 pa-10"
+      color="#fff">
+        <v-row no-gutters class="d-flex justify-center">
+          <v-col lg="7" cols="10" class="pa-0">
+            <v-form v-model="isFormValid" @submit.prevent>
+              <v-col class="pa-0">
+                <label for="category">Categoria</label>
+                <v-select
+                outlined
+                :items="categories"
+                rounded
+                :value="product.category"
+                v-model="product.category"
+                id="category"
+                >
+                </v-select>
+              </v-col>
+              <v-col class="pa-0">
+                <label for="name">Nome</label>
+                <v-text-field
+                outlined
+                rounded
+                v-model="product.name"
+                id="name"
+                >
+                </v-text-field>
+              </v-col>
+              <v-col class="pa-0">
+                <label for="name">Descrição</label>
+                <v-text-field
+                outlined
+                rounded
+                v-model="product.description"
+                id="description"
+                >
+                </v-text-field>
+              </v-col>
+              <v-col class="pa-0">
+                <label for="name">Preço</label>
+                <v-currency-field
+                v-model="product.price"
+                outlined
+                rounded
+                id="description"
+                >
+                </v-currency-field>
+              </v-col>
+              <v-col class="pa-0">
+                <label for="name">Foto</label>
+                <v-file-input
+                  truncate-length="15"
+                  @change="changeFile"
+                ></v-file-input>
+              </v-col>
+              <v-col class="pa-0 d-flex justify-center pt-5">
+                <v-btn
+                color="green"
+                :outlined="false"
+                @click="edit? updateProduct() : createProduct()"
+                >
+                  <span style="color: #fff">{{edit ? 'Atualizar' : 'Criar'}}</span>
+                </v-btn>
+              </v-col>
+            </v-form>
+          </v-col>
+          <v-col cols="10" lg="5" class="pa-0 d-flex flex-grow-0 justify-center pt-lg-0 pt-10">
+              <v-card
+                class="mx-auto"
+                min-width="400"
                 max-width="400"
-                :src="product.image ? product.image : 'https://fermello.com.br/wp-content/themes/consultix/images/no-image-found-360x260.png'"
-              ></v-img>
-              <v-card-title>{{product.name}}</v-card-title>
-              <v-card-text>
-                <div>
-                  <span class="product-description" style="fontSize: 1em" v-if="product.description">
-                    {{product.description}}
-                  </span>
-                </div>
-              </v-card-text>
-              <v-card-text>
-                <div>
-                  <span class="product-price">
-                    {{product.price ? product.price : '0' | currency}}
-                  </span>
-                </div>
-              </v-card-text>
-            </v-card>
-        </v-col>
-      </v-row>
+                max-height="400"
+                min-height="400"
+              >
+                <v-img
+                  height="200"
+                  max-width="400"
+                  :src="product.image ? product.image : 'https://fermello.com.br/wp-content/themes/consultix/images/no-image-found-360x260.png'"
+                ></v-img>
+                <v-card-title>{{product.name}}</v-card-title>
+                <v-card-text>
+                  <div>
+                    <span class="product-description" style="fontSize: 1em" v-if="product.description">
+                      {{product.description}}
+                    </span>
+                  </div>
+                </v-card-text>
+                <v-card-text>
+                  <div>
+                    <span class="product-price">
+                      {{product.price ? product.price : '0' | currency}}
+                    </span>
+                  </div>
+                </v-card-text>
+              </v-card>
+          </v-col>
+        </v-row>
+      </v-card>
     </v-col>
   </v-container>
 </template>
@@ -233,6 +248,19 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.wrapper {
+  background: url('https://img.freepik.com/fotos-gratis/vista-lateral-de-batatas-fritas-com-tempero_141793-4899.jpg?w=2000')!important;
+  background-size: cover!important;
+  background-repeat: no-repeat;
+}
 
+.page-title {
+  color: #fff;
+  font-family: 'Kaushan Script', sans-serif;
+  letter-spacing: 4px;
+  font-weight: bold;
+  font-size: 3.5em;
+  text-shadow: 1px 1px 3px black!important;
+}
 </style>

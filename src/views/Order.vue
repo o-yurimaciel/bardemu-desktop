@@ -1,154 +1,170 @@
 <template>
-  <v-container fluid class="pa-0 ma-0">
-    <v-col class="pa-0 d-flex flex-column flex-grow-0 pt-10 pb-10">
+  <v-container fluid class="pa-0 ma-0 wrapper">
+    <v-col class="pa-0 d-flex flex-column flex-grow-0 pt-10">
       <v-col offset="1" class="pa-0">
         <v-breadcrumbs
           class="pa-0"
           :items="breadCrumbs"
           divider="/"
-        ></v-breadcrumbs>
-      </v-col>
-      <v-col class="pa-0 d-flex justify-center pt-10">
-        <span class="orderStatus text-center">
-          {{ formatStatus(order.orderStatus) }}
-        </span>
-      </v-col>
-      <v-col cols="8" class="pa-0 d-flex justify-center pt-3 align-center mx-auto" v-if="order.orderStatus !== 'DELIVERED' && order.orderStatus !== 'CANCELLED'">
-        <v-icon color="var(--primary-color)">mdi-map-marker</v-icon>
-        <span class="ml-2">
-          Entregar em: {{ formatDeliveryAt(order) }}
-        </span>
-      </v-col>
-      <v-col class="pa-0 d-flex justify-center">
-        <a @click="openWeb">https://www.bardemu.com.br/pedido/{{order._id}}</a>
-      </v-col>
-      <v-col lg="6" cols="10" class="pa-0 mx-auto pt-10">
-        <v-timeline
-          reverse
         >
-          <v-timeline-item
-            color="var(--primary-color)"
-            v-for="(item, i) in order.orderStatusHistory"
-            :key="i"
-            class="pa-5 ma-5"
-            fill-dot
-            :icon="getTimelineIcon(item.status)"
-          >
-            <span style="font-weight: 700">{{ formatDate(item.date) }}</span><br>
-            {{ formatStatusHistory(item.status) }} <br>
-          </v-timeline-item>
-        </v-timeline>
+          <template v-slot:item="{ item }">
+            <v-breadcrumbs-item style="cursor: pointer" :to="item.to">
+              <span class="bread-item" style="color: #fff">
+                {{ item.text }}
+              </span>
+            </v-breadcrumbs-item>
+          </template>
+        </v-breadcrumbs>
       </v-col>
-      <v-col lg="6" cols="11" class="pa-0 mx-auto pt-10">
-        <v-expansion-panels>
-          <v-expansion-panel>
-            <v-expansion-panel-header>
-              Detalhamento
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-              <v-col
-              v-for="userDetail in userDetails" :key="userDetail.description"
-              class="pa-0" 
-              cols="12">
-                <v-row no-gutters class="d-flex align-center" v-if="userDetail.value">
-                  <v-col lg="8" cols="12" class="pa-0 d-flex flex-column">
-                    <v-col class="pa-0">
-                      <span class="product-title">
-                        {{ userDetail.description }}
-                      </span>
-                    </v-col>
-                  </v-col>
-                  <v-col class="pa-0 d-flex justify-lg-end justify-start">
-                    <span class="product-price">
-                      {{ userDetail.value }}
-                    </span>
-                  </v-col>
-                </v-row>
-              </v-col>
-              <hr class="mt-5 mb-5">
-              <v-col
-              v-for="product in order.products" :key="product._id"
-              class="pa-0" 
-              cols="12">
-                <v-row no-gutters class="d-flex align-center">
-                  <v-col lg="8" cols="12" class="pa-0 d-flex flex-column">
-                    <v-col class="pa-0">
-                      <span class="product-title">
-                        {{product.quantity + 'x'}} {{product.name}}
-                      </span>
-                    </v-col>
-                    <v-col class="pa-0" v-if="product.note">
-                      <span class="product-description">
-                        Observação: {{product.note}}
-                      </span>
-                    </v-col>
-                  </v-col>
-                  <v-col class="pa-0 d-flex justify-lg-end justify-start">
-                    <span class="product-price">
-                      {{product.price * product.quantity | currency}}
-                    </span>
-                  </v-col>
-                </v-row>
-              </v-col>
-              <hr class="mt-5 mb-5">
-              <v-col
-              v-for="detail in details" :key="detail.description"
-              class="pa-0" 
-              cols="12">
-                <v-row no-gutters class="d-flex align-center" v-if="detail.value">
-                  <v-col lg="8" cols="12" class="pa-0 d-flex flex-column">
-                    <v-col class="pa-0">
-                      <span class="product-title">
-                        {{ detail.description }}
-                      </span>
-                    </v-col>
-                  </v-col>
-                  <v-col class="pa-0 d-flex justify-lg-end justify-start">
-                    <span class="product-price">
-                      {{ detail.value | currency }}
-                    </span>
-                  </v-col>
-                </v-row>
-              </v-col>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-          <v-expansion-panel v-if="order.orderStatus !== 'DELIVERED' && order.orderStatus !== 'CANCELLED'">
-            <v-expansion-panel-header>
-              Atualizar status
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-              <v-col class="pa-0">
-                <span class="product-title">Qual status deseja adicionar?</span>
-              </v-col>
-              <v-select
-              v-model="orderStatus"
-              :items="statusOptions"
-              >
-                <template slot="selection" slot-scope="data">
-                  <span class="select-selection">{{data.item.label}}</span>
-                </template>
-                <template slot="item" slot-scope="data">
-                  <span class="select-item">{{data.item.label}}</span>
-                </template>
-              </v-select>
-              <v-col class="pa-0 d-flex justify-center pt-5">
-                <v-btn
-                :outlined="false"
-                width="100%"
-                dense
-                v-model="orderStatus"
-                @click="updateOrderStatus"
+      <v-col class="pa-0 d-flex justify-center pt-15 pb-15">
+        <v-card
+        width="70%"
+        color="#fff"
+        class="elevation-3 pa-10"
+        >
+          <v-col class="pa-0 d-flex justify-center">
+            <span class="orderStatus text-center">
+              {{ formatStatus(order.orderStatus) }}
+            </span>
+          </v-col>
+          <v-col cols="10" class="pa-0 d-flex justify-center pt-3 align-center mx-auto" v-if="order.orderStatus !== 'DELIVERED' && order.orderStatus !== 'CANCELLED'">
+            <v-icon color="var(--primary-color)">mdi-map-marker</v-icon>
+            <span class="ml-2">
+              Entregar em: {{ formatDeliveryAt(order) }}
+            </span>
+          </v-col>
+          <v-col class="pa-0 d-flex justify-center">
+            <a @click="openWeb">https://www.bardemu.com.br/pedido/{{order._id}}</a>
+          </v-col>
+          <v-col lg="6" cols="10" class="pa-0 mx-auto pt-10">
+            <v-timeline
+              reverse
+            >
+              <v-timeline-item
                 color="var(--primary-color)"
-                >
-                  <span style="color: #fff">
-                    <v-icon color="#fff">mdi-refresh</v-icon>
-                    Atualizar
-                  </span>
-                </v-btn>
-              </v-col>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
+                v-for="(item, i) in order.orderStatusHistory"
+                :key="i"
+                class="pa-5 ma-5"
+                fill-dot
+                :icon="getTimelineIcon(item.status)"
+              >
+                <span style="font-weight: 700">{{ formatDate(item.date) }}</span><br>
+                {{ formatStatusHistory(item.status) }} <br>
+              </v-timeline-item>
+            </v-timeline>
+          </v-col>
+          <v-col cols="11" class="pa-0 mx-auto pt-10">
+            <v-expansion-panels>
+              <v-expansion-panel>
+                <v-expansion-panel-header>
+                  Detalhamento
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-col
+                  v-for="userDetail in userDetails" :key="userDetail.description"
+                  class="pa-0" 
+                  cols="12">
+                    <v-row no-gutters class="d-flex align-center" v-if="userDetail.value">
+                      <v-col lg="8" cols="12" class="pa-0 d-flex flex-column">
+                        <v-col class="pa-0">
+                          <span class="product-title">
+                            {{ userDetail.description }}
+                          </span>
+                        </v-col>
+                      </v-col>
+                      <v-col class="pa-0 d-flex justify-lg-end justify-start">
+                        <span class="product-price">
+                          {{ userDetail.value }}
+                        </span>
+                      </v-col>
+                    </v-row>
+                  </v-col>
+                  <hr class="mt-5 mb-5">
+                  <v-col
+                  v-for="product in order.products" :key="product._id"
+                  class="pa-0" 
+                  cols="12">
+                    <v-row no-gutters class="d-flex align-center">
+                      <v-col lg="8" cols="12" class="pa-0 d-flex flex-column">
+                        <v-col class="pa-0">
+                          <span class="product-title">
+                            {{product.quantity + 'x'}} {{product.name}}
+                          </span>
+                        </v-col>
+                        <v-col class="pa-0" v-if="product.note">
+                          <span class="product-description">
+                            Observação: {{product.note}}
+                          </span>
+                        </v-col>
+                      </v-col>
+                      <v-col class="pa-0 d-flex justify-lg-end justify-start">
+                        <span class="product-price">
+                          {{product.price * product.quantity | currency}}
+                        </span>
+                      </v-col>
+                    </v-row>
+                  </v-col>
+                  <hr class="mt-5 mb-5">
+                  <v-col
+                  v-for="detail in details" :key="detail.description"
+                  class="pa-0" 
+                  cols="12">
+                    <v-row no-gutters class="d-flex align-center" v-if="detail.value">
+                      <v-col lg="8" cols="12" class="pa-0 d-flex flex-column">
+                        <v-col class="pa-0">
+                          <span class="product-title">
+                            {{ detail.description }}
+                          </span>
+                        </v-col>
+                      </v-col>
+                      <v-col class="pa-0 d-flex justify-lg-end justify-start">
+                        <span class="product-price">
+                          {{ detail.value | currency }}
+                        </span>
+                      </v-col>
+                    </v-row>
+                  </v-col>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+              <v-expansion-panel v-if="order.orderStatus !== 'DELIVERED' && order.orderStatus !== 'CANCELLED'">
+                <v-expansion-panel-header>
+                  Atualizar status
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-col class="pa-0">
+                    <span class="product-title">Qual status deseja adicionar?</span>
+                  </v-col>
+                  <v-select
+                  v-model="orderStatus"
+                  :items="statusOptions"
+                  >
+                    <template slot="selection" slot-scope="data">
+                      <span class="select-selection">{{data.item.label}}</span>
+                    </template>
+                    <template slot="item" slot-scope="data">
+                      <span class="select-item">{{data.item.label}}</span>
+                    </template>
+                  </v-select>
+                  <v-col class="pa-0 d-flex justify-center pt-5">
+                    <v-btn
+                    :outlined="false"
+                    width="100%"
+                    dense
+                    v-model="orderStatus"
+                    @click="updateOrderStatus"
+                    color="var(--primary-color)"
+                    >
+                      <span style="color: #fff">
+                        <v-icon color="#fff">mdi-refresh</v-icon>
+                        Atualizar
+                      </span>
+                    </v-btn>
+                  </v-col>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </v-col>
+        </v-card>
       </v-col>
     </v-col>
   </v-container>
@@ -309,6 +325,12 @@ export default {
 </script>
 
 <style scoped>
+.wrapper {
+  background: url('https://p4.wallpaperbetter.com/wallpaper/470/622/407/burger-4k-background-image-hd-wallpaper-preview.jpg')!important;
+  background-size: cover!important;
+  background-repeat: no-repeat;
+}
+
 .orderStatus {
   font-family: 'Roboto', sans-serif;
   font-size: 28px;

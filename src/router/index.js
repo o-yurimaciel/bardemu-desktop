@@ -22,7 +22,7 @@ const routes = [
     component: Orders
   },
   {
-    path: '/order/:id',
+    path: '/order/:id?',
     name: 'Order',
     component: Order
   },
@@ -32,7 +32,7 @@ const routes = [
     component: Products
   },
   {
-    path: '/product/:id',
+    path: '/product/:id?',
     name: 'product-item',
     component: ProductItem
   },
@@ -42,7 +42,7 @@ const routes = [
     component: Categories
   },
   {
-    path: '/category/:id',
+    path: '/category/:id?',
     name: 'category-item',
     component: CategoryItem
   },
