@@ -7,7 +7,6 @@ import path from 'path'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 import { autoUpdater } from 'electron-updater'
 const { version } = require('../package.json')
-import './native/ipcEvents'
 
 autoUpdater.logger = log
 autoUpdater.autoInstallOnAppQuit = false

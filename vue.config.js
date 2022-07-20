@@ -30,8 +30,7 @@ module.exports = {
           isVerifyChecksum: false
         },
         extraResources: [
-          './build/app-tray-icon.png',
-          './src/native/websocket.js'
+          './build/app-tray-icon.png'
         ]
       }
     }

@@ -29,14 +29,6 @@ ipcRenderer.on('router-redirect', (event, route) => {
   }
 })
 
-ipcRenderer.send('ws-kill')
-ipcRenderer.send('ws')
-
-ipcRenderer.on('ws-reply', (event, msg) => {
-  ipcRenderer.send('notification')
-  EventBus.$emit('new-order', msg)
-}).setMaxListeners(0)
-
 process.on('uncaughtException', (err) => {
   log.error(`[MAIN-PROCESS] uncaughtException ${err}`)
 })
@@ -56,3 +48,11 @@ process.on('exit', function(code) {
 process.on('error', function(err) {
   log.error(`[MAIN-PROCESS] error ${JSON.stringify(err)}`)
 });
+
+const server = process.env.VUE_APP_WS_SERVER
+const connection = new WebSocket(server)
+
+connection.onmessage = (event) => {
+  ipcRenderer.send('notification')
+  EventBus.$emit('new-order', event.data)
+}

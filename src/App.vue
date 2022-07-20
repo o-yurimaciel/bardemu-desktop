@@ -13,6 +13,7 @@
 <script>
 import OrderAlert from './components/orderAlert.vue'
 import { EventBus } from './EventBus'
+import { ipcRenderer } from 'electron'
 
 export default {
   name: 'App',
@@ -25,6 +26,7 @@ export default {
   },
   mounted() {
     EventBus.$on('new-order', (order) => {
+      ipcRenderer.send('notification')
       this.openDialogOrders = true
       this.newestOrders.push(order)
     })
