@@ -26,7 +26,6 @@ export default {
   },
   mounted() {
     EventBus.$on('new-order', (order) => {
-      ipcRenderer.send('notification')
       this.openDialogOrders = true
       this.newestOrders.push(order)
     })
