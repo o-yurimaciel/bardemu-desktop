@@ -54,5 +54,9 @@ const connection = new WebSocket(server)
 
 connection.onmessage = (event) => {
   ipcRenderer.send('notification')
-  EventBus.$emit('new-order', event.data)
+  EventBus.$emit('new-order', JSON.parse(event.data))
+}
+
+connection.onerror = (error) => {
+  log.error(`[WS] ${error}`)
 }
