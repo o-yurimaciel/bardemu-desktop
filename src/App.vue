@@ -13,7 +13,6 @@
 <script>
 import OrderAlert from './components/orderAlert.vue'
 import { EventBus } from './EventBus'
-import { ipcRenderer } from 'electron'
 
 export default {
   name: 'App',
