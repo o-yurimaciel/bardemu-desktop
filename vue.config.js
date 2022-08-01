@@ -2,9 +2,33 @@ module.exports = {
   transpileDependencies: [
     'vuetify'
   ],
+  configureWebpack: {
+    output: {
+      pathinfo: false
+    },
+    optimization: {
+      splitChunks: {
+        chunks: 'all'
+      }
+    },
+    node: {
+      module: "empty"
+    }
+  },
   pluginOptions: {
     electronBuilder: {
       nodeIntegration: true,
+      chainWebpackMainProcess: (config) => {
+        config.module
+        .rule("pdf")
+        .test(/\.pdf$/)
+        .use("file-loader")
+        .options({
+          name: '[name].[ext]'
+        })
+        .loader("file-loader")
+        .end()
+      },
       builderOptions: {
         productName: "BarDeMu Lanches",
         publish: {

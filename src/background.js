@@ -6,6 +6,7 @@ import log from './logConfig'
 import path from 'path'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 import { autoUpdater } from 'electron-updater'
+import './ipcEvents'
 const { version } = require('../package.json')
 
 autoUpdater.logger = log

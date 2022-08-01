@@ -2,6 +2,14 @@
   <v-app>
     <v-main>
       <router-view/>
+      <v-alert 
+      v-if="alert" 
+      style="position: absolute"
+      max-width="400px"
+      :type="alert.type"
+      class="alert">
+        {{alert.message}}
+      </v-alert>
       <OrderAlert 
       v-if="openDialogOrders" 
       :orders="newestOrders" 
@@ -17,6 +25,7 @@ import { EventBus } from './EventBus'
 export default {
   name: 'App',
   data: () => ({
+    alert: false,
     openDialogOrders: false,
     newestOrders: []
   }),
@@ -27,6 +36,14 @@ export default {
     EventBus.$on('new-order', (order) => {
       this.openDialogOrders = true
       this.newestOrders.push(order)
+    })
+
+    EventBus.$on('alert', (alert) => {
+      this.alert = false
+      this.alert = alert
+      setTimeout(() => {
+        this.alert = false
+      }, 5000);
     })
   },
   methods: {

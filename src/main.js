@@ -49,8 +49,12 @@ process.on('error', function(err) {
   log.error(`[MAIN-PROCESS] error ${JSON.stringify(err)}`)
 });
 
-const server = process.env.VUE_APP_WS_SERVER
+const server = process.env.VUE_APP_WS_SERVER_PROD
 const connection = new WebSocket(server)
+
+connection.onopen = (event) => {
+  log.info(`[WS] open ${JSON.stringify(event)}`)
+}
 
 connection.onmessage = (event) => {
   ipcRenderer.send('notification')
@@ -58,5 +62,9 @@ connection.onmessage = (event) => {
 }
 
 connection.onerror = (error) => {
-  log.error(`[WS] ${error}`)
+  log.error(`[WS] ${JSON.stringify(error)}`)
 }
+
+ipcRenderer.on('print-reply', (event, printed) => {
+  console.log(event, printed)
+})

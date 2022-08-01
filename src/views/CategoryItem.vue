@@ -97,7 +97,7 @@ export default {
       console.log(this.category)
       bardemu.post('/category', this.category).then((res) => {
         console.log(res)
-        this.$router.push('/categorias')
+        this.$router.push('/categories')
         this.$store.dispatch('openAlert', {
           message: 'Categoria criada!',
           type: 'success'

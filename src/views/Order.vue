@@ -16,12 +16,18 @@
           </template>
         </v-breadcrumbs>
       </v-col>
-      <v-col class="pa-0 d-flex justify-center pt-15 pb-15">
+      <v-col class="pa-0 d-flex justify-center pt-15 pb-15" style="position: relative">
         <v-card
         width="70%"
         color="#fff"
         class="elevation-3 pa-10"
         >
+          <div style="width: 65px; position: absolute; right: 10px; top: 10px">
+            <v-row no-gutters class="d-flex justify-space-between">
+              <v-icon size="30" @click="openWhatsApp" color="green" title="Falar com o cliente">mdi-whatsapp</v-icon>
+              <v-icon size="30" @click="printOrder" color="black" title="Imprimir detalhamento">mdi-printer</v-icon>
+            </v-row>
+          </div>
           <v-col class="pa-0 d-flex justify-center">
             <span class="orderStatus text-center">
               {{ formatStatus(order.orderStatus) }}
@@ -59,7 +65,7 @@
                 <v-expansion-panel-header>
                   Detalhamento
                 </v-expansion-panel-header>
-                <v-expansion-panel-content>
+                <v-expansion-panel-content id="detail">
                   <v-col
                   v-for="userDetail in userDetails" :key="userDetail.description"
                   class="pa-0" 
@@ -318,6 +324,21 @@ export default {
             this.orderStatus = this.statusOptions[0].value
           }
         })
+      })
+    },
+    openWhatsApp() {
+      const { shell } = require('electron')
+      const phone = this.order.clientPhone.replace(/[^0-9]/g, '')
+      shell.openExternal(`https://api.whatsapp.com/send?phone=${phone}`)
+    },
+    printOrder() {
+      const { ipcRenderer } = require('electron')
+      const receipt = require('../utils/receipt').default
+      receipt(this.order).then((res) => {
+        console.log(res)
+        ipcRenderer.send('print-pdf')
+      }).catch((e) => {
+        console.log(e)
       })
     }
   }
