@@ -1,10 +1,8 @@
 <template>
   <v-app>
     <v-main>
-      <router-view/>
       <v-alert 
       v-if="alert" 
-      style="position: absolute"
       max-width="400px"
       :type="alert.type"
       class="alert">
@@ -14,6 +12,7 @@
       v-if="openDialogOrders" 
       :orders="newestOrders" 
       :closeDialog="closeDialog" />
+      <router-view/>
     </v-main>
   </v-app>
 </template>
@@ -57,6 +56,8 @@ export default {
 
 <style>
   @import url('../src/assets/fonts.css');
+  @import url('../src/assets/global.css');
+
   :root {
     --primary-color: #e41c38;
   }
@@ -70,6 +71,12 @@ export default {
     font-size: 1.4em;
     letter-spacing: 1.5px;
     color: black;
+  }
+
+  .alert {
+    position: absolute!important;
+    top: 10px;
+    right: 10px;
   }
 
   .product-description {

@@ -156,7 +156,6 @@
                     :outlined="false"
                     width="100%"
                     dense
-                    v-model="orderStatus"
                     @click="updateOrderStatus"
                     color="var(--primary-color)"
                     >
@@ -207,7 +206,7 @@ export default {
     }
   },
   mounted() {
-    this.orderStatus = this.statusOptions[0]
+    this.orderStatus = this.statusOptions[0].value
     this.getOrder(this.$router.history.current.params.id)
   },
   methods: {

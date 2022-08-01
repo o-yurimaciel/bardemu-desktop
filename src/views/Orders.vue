@@ -15,9 +15,17 @@
             </v-breadcrumbs-item>
           </template>
         </v-breadcrumbs>
-        <span class="page-title">Pedidos</span>
+        <v-row no-gutters class="d-flex align-center">
+          <span class="page-title mr-5">Pedidos</span>
+          <v-icon 
+          title="Atualizar" 
+          :class="handlingh ? 'rotatingAnimation' : ''" 
+          @click="getOrders" 
+          color="#fff" 
+          size="70">mdi-refresh-circle</v-icon>
+        </v-row>
       </v-col>
-      <v-col cols="12" class="pa-0 pt-10 content">
+      <v-col cols="12" class="pa-0 pt-10 content" v-if="orders && orders.length > 0">
         <table style="width: 100%" class="elevation-1">
           <tr style="backgroundColor: #fff">
             <th>Data</th>
@@ -60,6 +68,7 @@ export default {
   data() {
     return {
       orders: [],
+      handlingh: false,
       breadCrumbs: [
         { text: 'Home', to: '/' }
       ]
@@ -74,12 +83,20 @@ export default {
       return format(new Date(date), 'HH:mm')
     },
     getOrders() {
+      this.orders = []
+      this.handlingh = true
       bardemu.get('/orders').then((res) => {
         console.log(res)
         this.orders = res.data.sort((a, b) => {
           return new Date(a.createdAt) < new Date(b.createdAt) ? 1 : -1
         })
+        this.handlingh = false
       }).catch((e) => {
+        this.handlingh = false
+        this.$store.dispatch('openAlert', {
+          message: 'Lista de pedidos indisponível',
+          type: 'error'
+        })
         console.log(e.response)
       })
     },

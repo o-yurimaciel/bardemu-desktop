@@ -22,8 +22,10 @@ ipcMain.on("print-pdf", (event) => {
   ], function(err) {  
     if(!err) {
       log.info(`Impressão OK!\nPrintSettings: ${printSettings}`)
+      event.reply('print-reply', true)
     } else {
       log.error(JSON.stringify(err))
+      event.reply('print-reply', false)
     }
   });
 })

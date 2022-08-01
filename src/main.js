@@ -8,12 +8,14 @@ import './plugins/v-mask'
 import log from './logConfig'
 import { ipcRenderer } from 'electron'
 import { EventBus } from './EventBus'
+import store from './store'
 
 Vue.config.productionTip = false
 
 new Vue({
   vuetify,
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')
 
@@ -66,5 +68,16 @@ connection.onerror = (error) => {
 }
 
 ipcRenderer.on('print-reply', (event, printed) => {
-  console.log(event, printed)
+  console.log('print-reply', printed)
+  if(printed) {
+    store.dispatch('openAlert', {
+      message: 'Enviado para área de impressão',
+      type: 'success'
+    })
+  } else {
+    store.dispatch('openAlert', {
+      message: 'Erro ao tentar imprimir',
+      type: 'error'
+    })
+  }
 })

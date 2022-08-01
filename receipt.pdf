@@ -10,7 +10,7 @@
 endobj
 4 0 obj
 <<
-/Length 672
+/Length 766
 >>
 stream
 0.5670000000000001 w
@@ -21,22 +21,24 @@ BT
 0 g
 28.3464566929133888 813.5435433070865656 Td
 () Tj
-T* (        Pedido) Tj
+T* (        Pedido "62e8142b8fe95da2caa8de93") Tj
 T* () Tj
-T* (        Nome: Yuri Maciel) Tj
+T* (        Nome: Yuri) Tj
 T* (        Telefone: +55 \(51\) 99833-7663) Tj
-T* (        Tipo de Pagamento: Cartão de Crédito ) Tj
-T* (        Bandeira: Visa) Tj
+T* (        Endereço: Rua Rodi Avila Medeiros, 51 ) Tj
+T* (        Tipo de Pagamento: Dinheiro ) Tj
 T* (        __________________________________________________) Tj
 T* () Tj
 T* (        ) Tj
-T* (          1x Xis Frango R$24,50 ) Tj
-T* (          Observação: Sem cebola) Tj
-T* (          ) Tj
+T* (        1x Xis Calabresa R$29,00,) Tj
+T* (        1x Xis Frango R$24,50) Tj
+T* (        Obs: sem milho) Tj
+T* (        ) Tj
 T* (        __________________________________________________) Tj
 T* () Tj
 T* (        Entrega: R$0,00) Tj
-T* (        Total a pagar: R$24,50) Tj
+T* (        Total a pagar: R$53,50) Tj
+T* (        Troco: R$100,00) Tj
 T* (      ) Tj
 ET
 endstream
@@ -211,7 +213,7 @@ endobj
 19 0 obj
 <<
 /Producer (jsPDF 2.5.1)
-/CreationDate (D:20220801135633-03'00')
+/CreationDate (D:20220801153821-03'00')
 >>
 endobj
 20 0 obj
@@ -225,33 +227,33 @@ endobj
 xref
 0 21
 0000000000 65535 f 
-0000000875 00000 n 
-0000002692 00000 n 
+0000000969 00000 n 
+0000002786 00000 n 
 0000000015 00000 n 
 0000000152 00000 n 
-0000000932 00000 n 
-0000001057 00000 n 
-0000001187 00000 n 
-0000001320 00000 n 
-0000001457 00000 n 
-0000001580 00000 n 
-0000001709 00000 n 
-0000001841 00000 n 
-0000001977 00000 n 
-0000002105 00000 n 
-0000002232 00000 n 
-0000002361 00000 n 
-0000002494 00000 n 
-0000002596 00000 n 
-0000002940 00000 n 
-0000003026 00000 n 
+0000001026 00000 n 
+0000001151 00000 n 
+0000001281 00000 n 
+0000001414 00000 n 
+0000001551 00000 n 
+0000001674 00000 n 
+0000001803 00000 n 
+0000001935 00000 n 
+0000002071 00000 n 
+0000002199 00000 n 
+0000002326 00000 n 
+0000002455 00000 n 
+0000002588 00000 n 
+0000002690 00000 n 
+0000003034 00000 n 
+0000003120 00000 n 
 trailer
 <<
 /Size 21
 /Root 20 0 R
 /Info 19 0 R
-/ID [ <CC6CA76C8F4B9A5AAA2310E7507845F7> <CC6CA76C8F4B9A5AAA2310E7507845F7> ]
+/ID [ <3652AF041366F7C5C230BDCC2493DF0F> <3652AF041366F7C5C230BDCC2493DF0F> ]
 >>
 startxref
-3130
+3224
 %%EOF

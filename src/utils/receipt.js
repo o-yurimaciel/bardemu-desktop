@@ -12,26 +12,29 @@ export default function receipt(text) {
       });
       console.log(text)
       doc.text(`
-        Pedido
+        Pedido "${text._id}"
 
         Nome: ${text.clientName}
         Telefone: ${text.clientPhone}
+        Endereço: ${text.clientAddress}, ${text.clientAddressNumber} ${text.clientAddressComp ? `Comp: ${text.clientAddressComp}` : ''}
         Tipo de Pagamento: ${text.paymentType} ${text.cardFlag ? `
-        Bandeira: ${text.cardFlag}` : ''}${text.paymentType === 'Dinheiro' ? 
-        `Troco: R$${formatBRL(text.cashChange)}` : ''}
+        Bandeira: ${text.cardFlag}` : ''}
         __________________________________________________
 
         ${text.products.map((product) => {
-          const productLine = `${product.quantity}x ${product.name} R$${formatBRL(product.price)} ${product.note && product.note.length > 0 ? `
-          Observação: ${product.note}` : ''}`
-          return `
-          ${productLine}
-          `
+        if(product) {
+        const productLine = `${product.quantity}x ${product.name} R$${formatBRL(product.price)}${product.note && product.note.length > 0 ? `
+        Obs: ${product.note}` : ''}`
+        return `
+        ${productLine}`
+        }
         })}
+        
         __________________________________________________
 
         Entrega: R$${formatBRL(0)}
         Total a pagar: R$${formatBRL(text.totalValue)}
+        ${text.paymentType === 'Dinheiro' ? `Troco: R$${formatBRL(text.cashChange)}` : ''}
       `, 10, 10)
       const buffer = doc.output('datauristring').split('base64,')[1]
       fs.writeFileSync(pdfPath, buffer, 'base64')
