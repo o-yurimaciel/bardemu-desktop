@@ -185,6 +185,7 @@ const orderHistoryStatusOptions = Object.freeze({
 })
 
 import { bardemu } from '../services'
+import log from '../logConfig'
 
 export default {
   data() {
@@ -235,6 +236,7 @@ export default {
         this.updateStatusOptions()
         console.log(res)
       }).catch((e) => {
+        log.error('Erro ao consultar ordem ' + JSON.stringify(e.response.data))
         console.log(e.response)
       })
     },
@@ -312,6 +314,7 @@ export default {
         this.getOrder(this.order._id)
         console.log(res)
       }).catch((e) => {
+        log.error('Erro ao atualizar ordem ' + JSON.stringify(e.response.data))
         console.log(e)
       })
     },
@@ -337,6 +340,7 @@ export default {
         console.log(res)
         ipcRenderer.send('print-pdf')
       }).catch((e) => {
+        log.error('Erro ao gerar comprovante ' + JSON.stringify(e))
         console.log(e)
       })
     }

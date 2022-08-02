@@ -68,6 +68,7 @@
 
 <script>
 import { bardemu } from '../services'
+import log from '../logConfig'
 export default {
   data() {
     return {
@@ -103,8 +104,9 @@ export default {
           type: 'success'
         })
       }).catch((e =>  {
+        log.error('Erro ao criar categoria' + JSON.stringify(e.response.data))
         this.$store.dispatch('openAlert', {
-          message: 'Erro ao criar Categoria',
+          message: 'Erro ao criar Categoria ',
           type: 'error'
         })
         console.log(e.response)
@@ -117,12 +119,13 @@ export default {
         }
       }).then((res) => {
         console.log(res)
-        this.$router.push('/categorias')
+        this.$router.push('/categories')
         this.$store.dispatch('openAlert', {
           message: 'Categoria atualizada!',
           type: 'success'
         })
       }).catch((e) => {
+        log.error('Erro ao atualizar categoria ' + JSON.stringify(e.response.data))
         this.$store.dispatch('openAlert', {
           message: 'Erro ao atualizar Categoria',
           type: 'error'
@@ -140,11 +143,11 @@ export default {
         this.category = res.data
         console.log(res)
       }).catch((e) => {
+        log.error('Erro ao consultar categorias ' + JSON.stringify(e.response.data))
         this.$store.dispatch('openAlert', {
           message: 'Erro ao consultar Categoria',
           type: 'error'
         })
-        console.log(e.response)
       })
     },
   }

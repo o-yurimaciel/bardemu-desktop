@@ -23,6 +23,17 @@
       width="70%"
       class="elevation-3 pa-10"
       color="#fff">
+        <v-btn
+          color="red"
+          small
+          style="position: absolute;top:5px;right:5px;z-index: 100"
+          @click="deleteProduct(product, product.name)"
+          title="Excluir produto"
+        >
+          <v-icon style="color: #fff">
+            mdi-delete
+          </v-icon>
+        </v-btn>
         <v-row no-gutters class="d-flex justify-center">
           <v-col lg="7" cols="10" class="pa-0">
             <v-form v-model="isFormValid" @submit.prevent>
@@ -124,6 +135,9 @@
 
 <script>
 import { bardemu } from '../services'
+import { remote } from 'electron'
+import log from '../logConfig'
+
 export default {
   data() {
     return {
@@ -164,6 +178,7 @@ export default {
         })
       }).catch((e) => {
         console.log(e.response)
+        log.error('Erro ao consultar categorias ' + JSON.stringify(e.response.data))
         this.$store.dispatch('openAlert', {
           message: 'Erro ao consultar lista de Categorias',
           type: 'error'
@@ -174,12 +189,13 @@ export default {
       console.log(this.product)
       bardemu.post('/product', this.product).then((res) => {
         console.log(res)
-        this.$router.push('/produtos')
+        this.$router.push('/products')
         this.$store.dispatch('openAlert', {
           message: 'Produto criado!',
           type: 'success'
         })
       }).catch((e =>  {
+        log.error('Erro ao criar produto ' + JSON.stringify(e.response.data))
         this.$store.dispatch('openAlert', {
           message: 'Erro ao criar o produto',
           type: 'error'
@@ -194,12 +210,13 @@ export default {
         }
       }).then((res) => {
         console.log(res)
-        this.$router.push('/produtos')
+        this.$router.push('/products')
         this.$store.dispatch('openAlert', {
           message: 'Produto atualizado!',
           type: 'success'
         })
       }).catch((e) => {
+        log.error('Erro ao atualizar produto ' + JSON.stringify(e.response.data))
         this.$store.dispatch('openAlert', {
           message: 'Erro ao atualizar Produto',
           type: 'error'
@@ -218,12 +235,47 @@ export default {
         this.product = res.data
         console.log(res)
       }).catch((e) => {
+        log.error('Erro ao consultar produto ' + JSON.stringify(e.response.data))
         this.$store.dispatch('openAlert', {
           message: 'Erro ao consultar Produto',
           type: 'error'
         })
         console.log(e.response)
       })
+    },
+    deleteProduct() {
+      const dialogOpts = {
+          type: "question",
+          buttons: [
+            'Sim', 'Não'
+          ],
+          title: 'Remover produto',
+          detail: `Tem certeza que deseja remover o produto "${this.product.name}"?`
+        }
+
+        remote.dialog.showMessageBox(dialogOpts).then((res) => {
+          if (res && res.response == 0) {
+            bardemu.delete('/product', {
+              data: {
+                _id: this.product._id
+              }
+            }).then((res) => {
+              console.log(res)
+              this.$router.push('/products')
+              this.$store.dispatch('openAlert', {
+                message: 'Produto removido',
+                type: 'success'
+              })
+            }).catch((e) => {
+              console.log(e)
+              log.error('Erro ao remover produto ' + JSON.stringify(e.response.data))
+              this.$store.dispatch('openAlert', {
+                message: 'Erro ao remover Produto',
+                type: 'error'
+              })
+            })
+          }
+        })
     },
     changeFile(e) {
       return new Promise((resolve, reject) => {

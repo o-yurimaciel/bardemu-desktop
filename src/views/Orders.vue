@@ -22,32 +22,41 @@
           :class="handlingh ? 'rotatingAnimation' : ''" 
           @click="getOrders" 
           color="#fff" 
-          size="70">mdi-refresh-circle</v-icon>
+          size="50">mdi-refresh-circle</v-icon>
         </v-row>
       </v-col>
       <v-col cols="12" class="pa-0 pt-10 content" v-if="orders && orders.length > 0">
-        <table style="width: 100%" class="elevation-1">
-          <tr style="backgroundColor: #fff">
-            <th>Data</th>
-            <th>Hora</th>
-            <th>Cliente</th>
-            <th>Telefone</th>
-            <th>Status</th>
-            <th>Pagamento</th>
-            <th>Valor</th>
+        <v-data-table
+          :headers="headers"
+          :items="orders"
+          item-key="name"
+          group-by="orderStatus"
+          class="elevation-1"
+          :rowsPerPageItems="[5]"
+          locale="pt-BR"
+          :footer-props="{ 
+            itemsPerPageText: 'Pedidos por página'
+          }"
+        >
+        <template v-slot:group.header="{groupBy, group, isOpen, toggle}">
+          <td :colspan="headers.length" @click="toggle" style="cursor: pointer">
+            <v-icon>
+              {{ isOpen ? 'mdi-minus' : 'mdi-plus' }}
+            </v-icon>
+            <span  style="font-weight: bold">{{formatStatusFilter(group)}}</span>
+          </td>
+        </template>
+        <template v-slot:item="{ item }">
+          <tr @click="openOrder(item)" style="cursor: pointer">
+            <td>{{new Date(item.createdAt).toLocaleDateString()}}</td>
+            <td>{{formatHour(item.createdAt)}}</td>
+            <td>{{item.clientName}}</td>
+            <td>{{item.clientPhone}}</td>
+            <td>{{item.paymentType}}</td>
+            <td>{{item.totalValue | currency}}</td>
           </tr>
-          <tbody @click="openOrder(order)" v-for="(order) in orders" :key="order._id">
-            <tr>
-              <td>{{new Date(order.createdAt).toLocaleDateString()}}</td>
-              <td>{{formatHour(order.createdAt)}}</td>
-              <td>{{order.clientName}}</td>
-              <td>{{order.clientPhone}}</td>
-              <td>{{formatStatus(order.orderStatus)}}</td>
-              <td>{{order.paymentType}}</td>
-              <td>{{order.totalValue | currency}}</td>
-            </tr>
-          </tbody>
-        </table>
+        </template>
+        </v-data-table>
       </v-col>
     </v-col>
   </v-container>
@@ -63,6 +72,7 @@ const orderHistoryStatusOptions = Object.freeze({
 })
 
 import { bardemu } from '../services'
+import log from '../logConfig'
 
 export default {
   data() {
@@ -71,7 +81,51 @@ export default {
       handlingh: false,
       breadCrumbs: [
         { text: 'Home', to: '/' }
-      ]
+      ],
+      headers: [
+        {
+          text: 'Data',
+          align: 'center',
+          value: 'createdAt',
+          sortable: false,
+          filterable: false
+        },
+        {
+          text: 'Hora',
+          align: 'center',
+          value: 'createdAt',
+          sortable: false,
+          filterable: false
+        },
+        {
+          text: 'Nome',
+          align: 'center',
+          value: 'clientName',
+          sortable: false,
+          filterable: false
+        },
+        { 
+          text: 'Telefone', 
+          value: 'clientPhone', 
+          align: 'center',
+          sortable: false,
+          filterable: false 
+        },
+        { 
+          text: 'Pagamento', 
+          value: 'paymentType', 
+          align: 'center',
+          sortable: false,
+          filterable: false
+        },
+        { 
+          text: 'Valor', 
+          value: 'totalValue', 
+          align: 'center',
+          sortable: false,
+          filterable: false
+        },
+      ],
     }
   },
   mounted() {
@@ -93,6 +147,7 @@ export default {
         this.handlingh = false
       }).catch((e) => {
         this.handlingh = false
+        log.error('Erro ao consultar ordens ' + JSON.stringify(e.response.data))
         this.$store.dispatch('openAlert', {
           message: 'Lista de pedidos indisponível',
           type: 'error'
@@ -112,6 +167,20 @@ export default {
           return "Entregue"
         case orderHistoryStatusOptions.CANCELLED:
           return "Cancelado"
+      }
+    },
+    formatStatusFilter(status) {
+      switch(status) {
+        case orderHistoryStatusOptions.PENDING:
+          return "Pedidos aguardando confirmação"
+        case orderHistoryStatusOptions.CONFIRMED:
+          return "Pedidos em preparação"
+        case orderHistoryStatusOptions.OUT_FOR_DELIVERY:
+          return "Pedidos em entrega"
+        case orderHistoryStatusOptions.DELIVERED:
+          return "Pedidos entregues"
+        case orderHistoryStatusOptions.CANCELLED:
+          return "Pedidos cancelados"
       }
     },
     openOrder(order) {

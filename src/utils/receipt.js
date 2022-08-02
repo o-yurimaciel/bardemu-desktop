@@ -2,6 +2,7 @@ const { jsPDF } = require('jspdf')
 const fs = require('fs')
 const path = require('path')
 const isDev = process.env.NODE_ENV !== 'production'
+const { format } = require('date-fns')
 
 export default function receipt(text) {
   return new Promise((resolve, reject) => {
@@ -12,7 +13,10 @@ export default function receipt(text) {
       });
       console.log(text)
       doc.text(`
+        BarDeMu Lanches
+
         Pedido "${text._id}"
+        ${new Date().toLocaleDateString()} - ${format(new Date(text.createdAt), 'HH:mm')}
 
         Nome: ${text.clientName}
         Telefone: ${text.clientPhone}

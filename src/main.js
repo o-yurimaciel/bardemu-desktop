@@ -68,7 +68,6 @@ connection.onerror = (error) => {
 }
 
 ipcRenderer.on('print-reply', (event, printed) => {
-  console.log('print-reply', printed)
   if(printed) {
     store.dispatch('openAlert', {
       message: 'Enviado para área de impressão',

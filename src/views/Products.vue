@@ -29,20 +29,28 @@
       </v-row>
       <v-col class="pa-0 pt-10">
         <v-row no-gutters>
-          <v-col cols="4" lg="3" class="pa-0 pa-2" v-for="product in products" :key="product._id">
+          <v-col cols="3" lg="3" class="pa-0 pa-1" v-for="product in products" :key="product._id">
             <v-card
               class="mx-auto"
-              min-width="200"
+              min-width="100"
               title="Editar Produto"
               height="100%"
               @click="editProduct(product)"
             >
               <v-img
-                height="200"
+                height="150"
+                max-width="300"
                 style="object-fit: contain"
                 :src="product.image ? product.image : 'https://fermello.com.br/wp-content/themes/consultix/images/no-image-found-360x260.png'"
               ></v-img>
               <v-card-title>{{product.name}}</v-card-title>
+              <v-card-text>
+                <div>
+                  <span class="product-description" style="fontSize: 1em" v-if="product.category">
+                    Categoria: {{product.category}}
+                  </span>
+                </div>
+              </v-card-text>
               <v-card-text>
                 <div>
                   <span class="product-description" style="fontSize: 1em" v-if="product.description">
@@ -50,7 +58,6 @@
                   </span>
                 </div>
               </v-card-text>
-
               <v-card-text>
                 <div>
                   <span v-if="product.price" class="product-price" style="fontSize: 1.2em">
@@ -58,16 +65,6 @@
                   </span>
                 </div>
               </v-card-text>
-              <v-btn
-                color="red"
-                style="position: absolute;top:5px;right:5px;z-index: 100"
-                @click="deleteProduct(product, product.name)"
-                title="Excluir produto"
-              >
-                <v-icon style="color: #fff">
-                  mdi-delete
-                </v-icon>
-              </v-btn>
             </v-card>
           </v-col>
         </v-row>
@@ -78,7 +75,8 @@
 
 <script>
 import { bardemu } from '../services'
-import { remote } from 'electron'
+import log from '../logConfig'
+
 export default {
   data() {
     return {
@@ -100,44 +98,13 @@ export default {
         name: 'product-item'
       })
     },
-    deleteProduct(product, name) {
-      const dialogOpts = {
-          type: "question",
-          buttons: [
-            'Sim', 'Não'
-          ],
-          title: 'Remover produto',
-          detail: `Tem certeza que deseja remover o produto "${name}"?`
-        }
-
-        remote.dialog.showMessageBox(dialogOpts).then((res) => {
-          if (res && res.response == 0) {
-            bardemu.delete('/product', {
-              data: {
-                _id: product._id
-              }
-            }).then((res) => {
-              console.log(res)
-              this.getProductList()
-              this.$store.dispatch('openAlert', {
-                message: 'Produto removido',
-                type: 'success'
-              })
-            }).catch((e) => {
-              console.log(e)
-              this.$store.dispatch('openAlert', {
-                message: 'Erro ao remover Produto',
-                type: 'error'
-              })
-            })
-          }
-        })
-    },
     getProductList() {
       bardemu.get('/products').then((res) => {
         this.products = res.data
         console.log(res)
       }).catch((e) => {
+        log.error('Erro ao consultar produtos ' + JSON.stringify(e.response.data))
+
         this.$store.dispatch('openAlert', {
           message: 'Erro ao consultar lista de Produtos',
           type: 'error'

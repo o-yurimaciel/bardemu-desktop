@@ -66,6 +66,8 @@
 <script>
 import { bardemu } from '../services'
 import { remote } from 'electron'
+import log from '../logConfig'
+
   export default {
     data: () => ({
       categories:[],
@@ -83,6 +85,7 @@ import { remote } from 'electron'
           this.categories = res.data.sort((a,b) => a.order - b.order)
           console.log(res)
         }).catch((e) => {
+          log.error('Erro ao consultar categorias ' + JSON.stringify(e.response.data))
           console.log(e.response)
         })
       },
@@ -115,7 +118,7 @@ import { remote } from 'electron'
               })
               this.getCategories()
             }).catch((e) => {
-              console.log(e.response)
+              log.error('Erro ao remover categoria ' + JSON.stringify(e.response.data))
               this.$store.dispatch('openAlert', {
                 message: 'Erro ao remover Categoria',
                 type: 'error'
