@@ -33,7 +33,7 @@ protocol.registerSchemesAsPrivileged([
 let win
 let tray = null
 
-async function createWindow() {
+function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
     width: 1200,
@@ -54,7 +54,7 @@ async function createWindow() {
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
+    win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
     if(isDevelopment) {
       win.webContents.openDevTools()
     }
@@ -63,6 +63,12 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
+
+  win.on('ready-to-show', () => {
+    autoUpdater.checkForUpdates()
+    win.setTitle(`BarDeMu Lanches ${version}`)
+    win.show()
+  })
 }
 
 app.on('second-instance', () => {
@@ -93,69 +99,66 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  createWindow().then(() => {
-    win.show()
-    autoUpdater.checkForUpdates()
-    win.setTitle(`BarDeMu Lanches ${version}`)
-    tray = new Tray(path.join(__dirname, '../build/app-tray-icon.png'))
-  
-    let contextMenu;
-  
-    if(isDevelopment) {
-      contextMenu = Menu.buildFromTemplate([
-        { label: "Abrir", type: "normal", click: () => {
-          win.focus();
-        }},
-        { label: "Reload", type: "normal", click: () => {
-          win.reload()
-        }},
-        { label: "Abrir DevTools", type: "normal", click: () => {
-          win.webContents.openDevTools()
-        }},
-        { label: "Redefinir Tela", type: "normal", click: () => {
-          win.setSize(1200, 800)
-        }},
-        { label: "Ver logs", type: "normal", click: () => {
-          if(isDevelopment) {
-            shell.openPath(path.join(app.getAppPath(), '../logs'));
-          } else {
-            shell.openPath(path.join(app.getAppPath(), '../../../logs'));
-          }
-        }},
-        { label: "Fechar", type: "normal", click: () => {
-          win.closable = true
-          win.close()
-        }}
-      ])
-    } else {
-      contextMenu = Menu.buildFromTemplate([
-        { label: "Abrir", type: "normal", click: () => {
-          win.focus();
-        }},
-        { label: "Pedidos", type: "normal", click: () => {
-          win.webContents.send('router-redirect', '/orders');
-          win.focus();
-        }},
-        { label: "Ver logs", type: "normal", click: () => {
-          if(isDevelopment) {
-            shell.openPath(path.join(app.getAppPath(), '../logs'));
-          } else {
-            shell.openPath(path.join(app.getAppPath(), '../../../logs'));
-          }
-        }},
-        { label: "Verificar Atualização", type: "normal", click: () => {
-          autoUpdater.checkForUpdates()
-        }},
-        { label: "Fechar", type: "normal", click: () => {
-          win.closable = true
-          win.close()
-        }}
-      ])
-    }
-  
-    tray.setToolTip('BarDeMu Lanches')
-    tray.setContextMenu(contextMenu)
-  })
+  createWindow()
+
+  tray = new Tray(path.join(__dirname, '../build/app-tray-icon.png'))
+
+  let contextMenu;
+
+  if(isDevelopment) {
+    contextMenu = Menu.buildFromTemplate([
+      { label: "Abrir", type: "normal", click: () => {
+        win.focus();
+      }},
+      { label: "Reload", type: "normal", click: () => {
+        win.reload()
+      }},
+      { label: "Abrir DevTools", type: "normal", click: () => {
+        win.webContents.openDevTools()
+      }},
+      { label: "Redefinir Tela", type: "normal", click: () => {
+        win.setSize(1200, 800)
+      }},
+      { label: "Ver logs", type: "normal", click: () => {
+        if(isDevelopment) {
+          shell.openPath(path.join(app.getAppPath(), '../logs'));
+        } else {
+          shell.openPath(path.join(app.getAppPath(), '../../../logs'));
+        }
+      }},
+      { label: "Fechar", type: "normal", click: () => {
+        win.closable = true
+        win.close()
+      }}
+    ])
+  } else {
+    contextMenu = Menu.buildFromTemplate([
+      { label: "Abrir", type: "normal", click: () => {
+        win.focus();
+      }},
+      { label: "Pedidos", type: "normal", click: () => {
+        win.webContents.send('router-redirect', '/orders');
+        win.focus();
+      }},
+      { label: "Verificar Atualização", type: "normal", click: () => {
+        autoUpdater.checkForUpdates()
+      }},
+      { label: "Ver logs", type: "normal", click: () => {
+        if(isDevelopment) {
+          shell.openPath(path.join(app.getAppPath(), '../logs'));
+        } else {
+          shell.openPath(path.join(app.getAppPath(), '../../../logs'));
+        }
+      }},
+      { label: "Fechar", type: "normal", click: () => {
+        win.closable = true
+        win.close()
+      }}
+    ])
+  }
+
+  tray.setToolTip('BarDeMu Lanches')
+  tray.setContextMenu(contextMenu)
 })
 
 autoUpdater.on('update-available', (info) => {

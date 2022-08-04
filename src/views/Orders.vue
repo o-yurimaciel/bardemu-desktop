@@ -30,22 +30,14 @@
           :headers="headers"
           :items="orders"
           item-key="name"
-          group-by="orderStatus"
           class="elevation-1"
-          :rowsPerPageItems="[5]"
+          :items-per-page.sync="itemsPerPage"
           locale="pt-BR"
           :footer-props="{ 
+            itemsPerPageOptions:[ 5, 10, 20, 30, -1 ],
             itemsPerPageText: 'Pedidos por página'
           }"
         >
-        <template v-slot:group.header="{groupBy, group, isOpen, toggle}">
-          <td :colspan="headers.length" @click="toggle" style="cursor: pointer">
-            <v-icon>
-              {{ isOpen ? 'mdi-minus' : 'mdi-plus' }}
-            </v-icon>
-            <span  style="font-weight: bold">{{formatStatusFilter(group)}}</span>
-          </td>
-        </template>
         <template v-slot:item="{ item }">
           <tr @click="openOrder(item)" style="cursor: pointer">
             <td>{{new Date(item.createdAt).toLocaleDateString()}}</td>
@@ -54,6 +46,7 @@
             <td>{{item.clientPhone}}</td>
             <td>{{item.paymentType}}</td>
             <td>{{item.totalValue | currency}}</td>
+            <td>{{formatStatus(item.orderStatus)}}</td>
           </tr>
         </template>
         </v-data-table>
@@ -79,6 +72,7 @@ export default {
     return {
       orders: [],
       handlingh: false,
+      itemsPerPage: 5,
       breadCrumbs: [
         { text: 'Home', to: '/' }
       ],
@@ -121,6 +115,13 @@ export default {
         { 
           text: 'Valor', 
           value: 'totalValue', 
+          align: 'center',
+          sortable: false,
+          filterable: false
+        },
+        { 
+          text: 'Status', 
+          value: 'orderStatus', 
           align: 'center',
           sortable: false,
           filterable: false

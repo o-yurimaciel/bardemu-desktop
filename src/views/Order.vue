@@ -33,6 +33,12 @@
               {{ formatStatus(order.orderStatus) }}
             </span>
           </v-col>
+          <v-col cols="10" class="pa-0 d-flex justify-center pt-3 align-center mx-auto" v-if="order.estimatedTime">
+            <v-icon color="var(--primary-color)">mdi-clock-fast</v-icon>
+            <span class="ml-2">
+              Tempo estimado para entrega: {{order.estimatedTime}}min
+            </span>
+          </v-col>
           <v-col cols="10" class="pa-0 d-flex justify-center pt-3 align-center mx-auto" v-if="order.orderStatus !== 'DELIVERED' && order.orderStatus !== 'CANCELLED'">
             <v-icon color="var(--primary-color)">mdi-map-marker</v-icon>
             <span class="ml-2">
@@ -137,26 +143,37 @@
                   Atualizar status
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
-                  <v-col class="pa-0">
-                    <span class="product-title">Qual status deseja adicionar?</span>
-                  </v-col>
-                  <v-select
-                  v-model="orderStatus"
-                  :items="statusOptions"
-                  >
-                    <template slot="selection" slot-scope="data">
-                      <span class="select-selection">{{data.item.label}}</span>
-                    </template>
-                    <template slot="item" slot-scope="data">
-                      <span class="select-item">{{data.item.label}}</span>
-                    </template>
-                  </v-select>
+                  <v-form v-model="statusFormValid" @submit.prevent>
+                    <v-col class="pa-0">
+                      <span class="product-title">Qual status deseja adicionar?</span>
+                    </v-col>
+                    <v-select
+                    v-model="orderStatus"
+                    :items="statusOptions"
+                    >
+                      <template slot="selection" slot-scope="data">
+                        <span class="select-selection">{{data.item.label}}</span>
+                      </template>
+                      <template slot="item" slot-scope="data">
+                        <span class="select-item">{{data.item.label}}</span>
+                      </template>
+                    </v-select>
+                    <v-col class="pa-0 pt-5 pb-5" v-if="orderStatus === 'CONFIRMED'">
+                      <span class="product-title">Tempo estimado para entrega em minutos?</span>
+                      <v-text-field
+                      v-model="estimatedTime"
+                      :error="!estimatedTime"
+                      >
+                      </v-text-field>
+                    </v-col>
+                  </v-form>
                   <v-col class="pa-0 d-flex justify-center pt-5">
                     <v-btn
                     :outlined="false"
                     width="100%"
                     dense
-                    @click="updateOrderStatus"
+                    :disabled="!statusFormValid"
+                    @click="statusFormValid ? updateOrderStatus() : null"
                     color="var(--primary-color)"
                     >
                       <span style="color: #fff">
@@ -203,7 +220,9 @@ export default {
         { label: "Pedido entregue", value: orderHistoryStatusOptions.DELIVERED },
         { label: "Pedido cancelado", value: orderHistoryStatusOptions.CANCELLED }
       ],
-      orderStatus: {}
+      orderStatus: {},
+      estimatedTime: null,
+      statusFormValid: false
     }
   },
   mounted() {
@@ -305,12 +324,16 @@ export default {
     },
     updateOrderStatus() {
       bardemu.put('/order', {
-        orderStatus: this.orderStatus
+        orderStatus: this.orderStatus,
+        estimatedTime: this.estimatedTime
       }, {
         params: {
           _id: this.order._id
         }
       }).then((res) => {
+        if(res.data.message) {
+          this.openWhatsApp(res.data.message)
+        }
         this.getOrder(this.order._id)
         console.log(res)
       }).catch((e) => {
@@ -328,10 +351,14 @@ export default {
         })
       })
     },
-    openWhatsApp() {
+    openWhatsApp(message) {
       const { shell } = require('electron')
       const phone = this.order.clientPhone.replace(/[^0-9]/g, '')
-      shell.openExternal(`https://api.whatsapp.com/send?phone=${phone}`)
+      if(message) {
+        shell.openExternal(`https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`)
+      } else {
+        shell.openExternal(`https://api.whatsapp.com/send?phone=${phone}`)
+      }
     },
     printOrder() {
       const { ipcRenderer } = require('electron')

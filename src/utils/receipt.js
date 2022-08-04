@@ -17,6 +17,8 @@ export default function receipt(text) {
 
         Pedido "${text._id}"
         ${new Date().toLocaleDateString()} - ${format(new Date(text.createdAt), 'HH:mm')}
+        
+        Código de entrega: ${text.deliveryId}
 
         Nome: ${text.clientName}
         Telefone: ${text.clientPhone}

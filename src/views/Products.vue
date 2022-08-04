@@ -49,6 +49,9 @@
                   <span class="product-description" style="fontSize: 1em" v-if="product.category">
                     Categoria: {{product.category}}
                   </span>
+                  <span class="product-description" style="fontSize: 1em" v-else>
+                    Sem categoria
+                  </span>
                 </div>
               </v-card-text>
               <v-card-text>
