@@ -207,7 +207,7 @@ autoUpdater.on('download-progress', (obj) => {
   }
 })
 
-ipcMain.on('notification', () => {
+ipcMain.on('order-notification', () => {
   let notify = new Notification({
     title: "Um novo pedido foi recebido.",
     body: "Clique para mais detalhes",
@@ -219,6 +219,19 @@ ipcMain.on('notification', () => {
     win.alwaysOnTop = true
     win.show()
     win.alwaysOnTop = false
+  })
+})
+
+ipcMain.on('feedback-notification', (order) => {
+  let notify = new Notification({
+    title: "Um novo feedback foi recebido.",
+    body: "Clique para mais detalhes",
+    icon: path.join(__dirname, '../build/app-tray-icon.png'),
+    urgency: 'critical'
+  })
+  notify.show()
+  notify.on('click', () => {
+    win.webContents.send('router-redirect', `/order/${order._id}`);
   })
 })
 

@@ -22,8 +22,15 @@
         color="#fff"
         class="elevation-3 pa-10"
         >
-          <div style="width: 65px; position: absolute; right: 10px; top: 10px">
+          <div style="width: 100px; position: absolute; right: 10px; top: 10px">
             <v-row no-gutters class="d-flex justify-space-between">
+              <v-icon 
+              size="30" 
+              @click="getOrder(order._id)" 
+              color="var(--primary-color)" 
+              title="Atualizar"
+              :class="handlingh ? 'rotatingAnimation' : ''" 
+              >mdi-refresh-circle</v-icon>
               <v-icon size="30" @click="openWhatsApp" color="green" title="Falar com o cliente">mdi-whatsapp</v-icon>
               <v-icon size="30" @click="printOrder" color="black" title="Imprimir detalhamento">mdi-printer</v-icon>
             </v-row>
@@ -191,7 +198,27 @@
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <v-col class="pa-0">
-                    Não há nenhum feedback.
+                    <v-col class="pa-0" v-if="!order.feedback">
+                      <span>Não há nenhum feedback.</span>
+                    </v-col>
+                    <v-col class="pa-0 d-flex flex-column">
+                      <span style="font-weight: bold">O que {{order.clientName}} achou do pedido?</span>
+                      <v-col cols="6" class="pa-0 pt-5">
+                        <v-row no-gutters class="d-flex align-center justify-space-between">
+                          <span style="font-weight: bold">{{order.feedback.rating}}</span>
+                          <v-rating
+                            v-model="order.feedback.rating"
+                            icon-label="custom icon label text {0} of {1}"
+                            :title="order.feedback.rating + ' estrelas'"
+                            color="yellow"
+                            dense
+                            background-color="var(--primary-color)"
+                          ></v-rating>
+                          <span>{{formatDate(order.feedback.createdAt)}}</span>
+                        </v-row>
+                      </v-col>
+                      <span class="pt-3">Comentário: {{order.feedback.message}}</span>
+                    </v-col>
                   </v-col>
                 </v-expansion-panel-content>
               </v-expansion-panel>
@@ -233,7 +260,8 @@ export default {
       ],
       orderStatus: {},
       estimatedTime: 60,
-      statusFormValid: false
+      statusFormValid: false,
+      handlingh: false
     }
   },
   mounted() {
@@ -246,11 +274,13 @@ export default {
       shell.openExternal(`https://www.bardemu.com.br/pedido/${this.order._id}`)
     },
     getOrder(id) {
+      this.handlingh = true
       bardemu.get('/order', {
         params: {
           _id: id
         }
       }).then((res) => {
+        this.handlingh = false
         this.order = res.data
         this.userDetails = [
           { description: 'Nome', value: this.order.clientName },
@@ -266,6 +296,7 @@ export default {
         this.updateStatusOptions()
         console.log(res)
       }).catch((e) => {
+        this.handlingh = false
         log.error('Erro ao consultar ordem ' + JSON.stringify(e.response.data))
         console.log(e.response)
       })

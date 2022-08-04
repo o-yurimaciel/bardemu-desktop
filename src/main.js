@@ -59,8 +59,20 @@ connection.onopen = (event) => {
 }
 
 connection.onmessage = (event) => {
-  ipcRenderer.send('notification')
-  EventBus.$emit('new-order', JSON.parse(event.data))
+  console.log(event.data)
+  if(event.data && event.data.type) {
+    switch(event.data.type) {
+      case "order":
+        ipcRenderer.send('order-notification')
+        EventBus.$emit('new-order', JSON.parse(event.data))
+        break
+      case "feedback":
+        ipcRenderer.send('feedback-notification', JSON.parse(event.data))
+        EventBus.$emit('new-feedback', JSON.parse(event.data))
+        break
+    }
+
+  }
 }
 
 connection.onerror = (error) => {
