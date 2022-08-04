@@ -163,6 +163,7 @@
                       <v-text-field
                       v-model="estimatedTime"
                       :error="!estimatedTime"
+                      :autofocus="true"
                       >
                       </v-text-field>
                     </v-col>
@@ -181,6 +182,16 @@
                         Atualizar
                       </span>
                     </v-btn>
+                  </v-col>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+              <v-expansion-panel>
+                <v-expansion-panel-header>
+                  Feedback
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-col class="pa-0">
+                    Não há nenhum feedback.
                   </v-col>
                 </v-expansion-panel-content>
               </v-expansion-panel>
@@ -221,7 +232,7 @@ export default {
         { label: "Pedido cancelado", value: orderHistoryStatusOptions.CANCELLED }
       ],
       orderStatus: {},
-      estimatedTime: null,
+      estimatedTime: 60,
       statusFormValid: false
     }
   },
@@ -317,7 +328,7 @@ export default {
       }
 
       if(order.clientAddressData) {
-        string = string.concat(" Complemento: " + order.clientAddressData)
+        string = string.concat(" Comp: " + order.clientAddressData)
       }
 
       return string

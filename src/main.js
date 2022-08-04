@@ -51,7 +51,7 @@ process.on('error', function(err) {
   log.error(`[MAIN-PROCESS] error ${JSON.stringify(err)}`)
 });
 
-const server = process.env.VUE_APP_WS_SERVER_PROD
+const server = process.env.VUE_APP_WS_SERVER
 const connection = new WebSocket(server)
 
 connection.onopen = (event) => {
