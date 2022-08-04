@@ -36,7 +36,7 @@ module.exports = {
           private: true,
           owner: "yrimaciel",
           repo: "bardemu-desktop",
-          token: "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"
+          token: "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"
         },
         win: {
           icon: './build/app-icon.png'
