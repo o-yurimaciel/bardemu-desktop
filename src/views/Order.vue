@@ -192,15 +192,12 @@
                   </v-col>
                 </v-expansion-panel-content>
               </v-expansion-panel>
-              <v-expansion-panel>
+              <v-expansion-panel v-if="order.feedback">
                 <v-expansion-panel-header>
                   Feedback
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <v-col class="pa-0">
-                    <v-col class="pa-0" v-if="!order.feedback">
-                      <span>Não há nenhum feedback.</span>
-                    </v-col>
                     <v-col class="pa-0 d-flex flex-column">
                       <span style="font-weight: bold">O que {{order.clientName}} achou do pedido?</span>
                       <v-col cols="6" class="pa-0 pt-5">
