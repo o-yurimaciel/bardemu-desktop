@@ -1,7 +1,8 @@
 import axios from 'axios'
+const isDevelopment = process.env.NODE_ENV !== 'production'
 
 const bardemu = axios.create({
-  baseURL: 'https://bardemu-backend.herokuapp.com'
+  baseURL: isDevelopment ? 'http://localhost:5050' : 'https://bardemu-backend.herokuapp.com'
 })
 
 export {

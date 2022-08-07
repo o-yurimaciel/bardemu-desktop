@@ -223,6 +223,7 @@ ipcMain.on('order-notification', () => {
 })
 
 ipcMain.on('feedback-notification', (order) => {
+  console.log('order', order)
   let notify = new Notification({
     title: "Um novo feedback foi recebido.",
     body: "Clique para mais detalhes",

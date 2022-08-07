@@ -211,7 +211,7 @@
                             dense
                             background-color="var(--primary-color)"
                           ></v-rating>
-                          <span>{{formatDate(order.feedback.createdAt)}}</span>
+                          <span style="font-weight: bold">{{formatDate(order.feedback.createdAt)}}</span>
                         </v-row>
                       </v-col>
                       <span class="pt-3">Comentário: {{order.feedback.message}}</span>
