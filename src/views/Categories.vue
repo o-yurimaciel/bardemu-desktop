@@ -86,6 +86,10 @@ import log from '../logConfig'
           console.log(res)
         }).catch((e) => {
           log.error('Erro ao consultar categorias ' + JSON.stringify(e.response.data))
+          this.$store.dispatch('openAlert', {
+            message: e.response.data ? e.response.data.message : `Erro ao consultar categorias`,
+            type: 'error'
+          })
           console.log(e.response)
         })
       },
@@ -119,8 +123,17 @@ import log from '../logConfig'
               this.getCategories()
             }).catch((e) => {
               log.error('Erro ao remover categoria ' + JSON.stringify(e.response.data))
+              if(e.response.status === 403) {
+                this.$store.commit('setToken', null)
+                this.$store.dispatch('openAlert', {
+                  message: 'Token de autorização expirado',
+                  type: "error"
+                })
+                this.$router.push('/')
+                return 
+              }
               this.$store.dispatch('openAlert', {
-                message: 'Erro ao remover Categoria',
+                message: e.response.data ? e.response.data.message : `Erro ao remover categoria`,
                 type: 'error'
               })
             })

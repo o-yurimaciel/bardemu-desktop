@@ -39,7 +39,11 @@ export default {
 
     EventBus.$on('alert', (alert) => {
       this.alert = false
-      this.alert = alert
+
+      setTimeout(() => {
+        this.alert = alert
+      }, 200);
+      
       setTimeout(() => {
         this.alert = false
       }, 5000);

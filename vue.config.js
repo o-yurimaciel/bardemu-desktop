@@ -33,10 +33,10 @@ module.exports = {
         productName: "BarDeMu Lanches",
         publish: {
           provider: 'github',
-          private: true,
+          // private: true,
           owner: "yrimaciel",
           repo: "bardemu-desktop",
-          token: "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"
+          token: "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"
         },
         win: {
           icon: './build/app-icon.png'

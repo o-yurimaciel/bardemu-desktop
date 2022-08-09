@@ -294,7 +294,11 @@ export default {
         console.log(res)
       }).catch((e) => {
         this.handlingh = false
-        log.error('Erro ao consultar ordem ' + JSON.stringify(e.response.data))
+        log.error('Erro ao consultar pedido ' + JSON.stringify(e.response.data))
+        this.$store.dispatch('openAlert', {
+          message: e.response.data ? e.response.data.message : `Erro ao consultar pedido`,
+          type: 'error'
+        })
         console.log(e.response)
       })
     },
@@ -376,7 +380,20 @@ export default {
         this.getOrder(this.order._id)
         console.log(res)
       }).catch((e) => {
-        log.error('Erro ao atualizar ordem ' + JSON.stringify(e.response.data))
+        log.error('Erro ao atualizar pedido ' + JSON.stringify(e.response.data))
+        if(e.response.status === 403) {
+          this.$store.commit('setToken', null)
+          this.$store.dispatch('openAlert', {
+            message: 'Token de autorização expirado',
+            type: "error"
+          })
+          this.$router.push('/')
+          return 
+        }
+        this.$store.dispatch('openAlert', {
+          message: e.response.data ? e.response.data.message : `Erro ao atualizar pedido`,
+          type: 'error'
+        })
         console.log(e)
       })
     },
@@ -406,7 +423,11 @@ export default {
         console.log(res)
         ipcRenderer.send('print-pdf')
       }).catch((e) => {
-        log.error('Erro ao gerar comprovante ' + JSON.stringify(e))
+        log.error('Erro ao gerar pdf ' + JSON.stringify(e))
+        this.$store.dispatch('openAlert', {
+          message: 'Erro ao gerar pdf',
+          type: 'error'
+        })
         console.log(e)
       })
     }

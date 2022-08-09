@@ -107,9 +107,8 @@ export default {
         console.log(res)
       }).catch((e) => {
         log.error('Erro ao consultar produtos ' + JSON.stringify(e.response.data))
-
         this.$store.dispatch('openAlert', {
-          message: 'Erro ao consultar lista de Produtos',
+          message: e.response.data ? e.response.data.message : `Erro ao consultar produtos`,
           type: 'error'
         })
         console.log(e.response)

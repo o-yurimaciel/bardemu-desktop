@@ -105,8 +105,17 @@ export default {
         })
       }).catch((e =>  {
         log.error('Erro ao criar categoria' + JSON.stringify(e.response.data))
+        if(e.response.status === 403) {
+          this.$store.commit('setToken', null)
+          this.$store.dispatch('openAlert', {
+            message: 'Token de autorização expirado',
+            type: "error"
+          })
+          this.$router.push('/')
+          return 
+        }
         this.$store.dispatch('openAlert', {
-          message: 'Erro ao criar Categoria ',
+          message: e.response.data ? e.response.data.message : `Erro ao criar categoria`,
           type: 'error'
         })
         console.log(e.response)
@@ -126,8 +135,17 @@ export default {
         })
       }).catch((e) => {
         log.error('Erro ao atualizar categoria ' + JSON.stringify(e.response.data))
+        if(e.response.status === 403) {
+          this.$store.commit('setToken', null)
+          this.$store.dispatch('openAlert', {
+            message: 'Token de autorização expirado',
+            type: "error"
+          })
+          this.$router.push('/')
+          return 
+        }
         this.$store.dispatch('openAlert', {
-          message: 'Erro ao atualizar Categoria',
+          message: e.response.data ? e.response.data.message : `Erro ao atualizar categoria`,
           type: 'error'
         })
         console.log(e.response)
@@ -145,7 +163,7 @@ export default {
       }).catch((e) => {
         log.error('Erro ao consultar categorias ' + JSON.stringify(e.response.data))
         this.$store.dispatch('openAlert', {
-          message: 'Erro ao consultar Categoria',
+          message: e.response.data ? e.response.data.message : `Erro ao consultar categorias`,
           type: 'error'
         })
       })

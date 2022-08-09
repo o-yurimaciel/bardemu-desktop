@@ -180,7 +180,7 @@ export default {
         console.log(e.response)
         log.error('Erro ao consultar categorias ' + JSON.stringify(e.response.data))
         this.$store.dispatch('openAlert', {
-          message: 'Erro ao consultar lista de Categorias',
+          message: e.response.data ? e.response.data.message : `Erro ao consultar categorias`,
           type: 'error'
         })
       })
@@ -196,8 +196,17 @@ export default {
         })
       }).catch((e =>  {
         log.error('Erro ao criar produto ' + JSON.stringify(e.response.data))
+        if(e.response.status === 403) {
+          this.$store.commit('setToken', null)
+          this.$store.dispatch('openAlert', {
+            message: 'Token de autorização expirado',
+            type: "error"
+          })
+          this.$router.push('/')
+          return 
+        }
         this.$store.dispatch('openAlert', {
-          message: 'Erro ao criar o produto',
+          message: e.response.data ? e.response.data.message : `Erro ao criar produto`,
           type: 'error'
         })
         console.log(e.response)
@@ -217,8 +226,17 @@ export default {
         })
       }).catch((e) => {
         log.error('Erro ao atualizar produto ' + JSON.stringify(e.response.data))
+        if(e.response.status === 403) {
+          this.$store.commit('setToken', null)
+          this.$store.dispatch('openAlert', {
+            message: 'Token de autorização expirado',
+            type: "error"
+          })
+          this.$router.push('/')
+          return 
+        }
         this.$store.dispatch('openAlert', {
-          message: 'Erro ao atualizar Produto',
+          message: e.response.data ? e.response.data.message : `Erro ao atualizar produto`,
           type: 'error'
         })
         console.log(e.response)
@@ -237,7 +255,7 @@ export default {
       }).catch((e) => {
         log.error('Erro ao consultar produto ' + JSON.stringify(e.response.data))
         this.$store.dispatch('openAlert', {
-          message: 'Erro ao consultar Produto',
+          message: e.response.data ? e.response.data.message : `Erro ao consultar produto`,
           type: 'error'
         })
         console.log(e.response)
@@ -269,8 +287,17 @@ export default {
             }).catch((e) => {
               console.log(e)
               log.error('Erro ao remover produto ' + JSON.stringify(e.response.data))
+              if(e.response.status === 403) {
+                this.$store.commit('setToken', null)
+                this.$store.dispatch('openAlert', {
+                  message: 'Token de autorização expirado',
+                  type: "error"
+                })
+                this.$router.push('/')
+                return 
+              }
               this.$store.dispatch('openAlert', {
-                message: 'Erro ao remover Produto',
+                message: e.response.data ? e.response.data.message : `Erro ao remover produto`,
                 type: 'error'
               })
             })
