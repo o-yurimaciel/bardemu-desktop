@@ -36,7 +36,7 @@ module.exports = {
           // private: true,
           owner: "yrimaciel",
           repo: "bardemu-desktop",
-          token: "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"
+          token: "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"
         },
         win: {
           icon: './build/app-icon.png'
@@ -55,6 +55,12 @@ module.exports = {
         },
         extraResources: [
           './build/app-tray-icon.png'
+        ],
+        extraFiles: [
+          {
+            from: 'node_modules/pdf-to-printer/dist/SumatraPDF.exe',
+            to: './resources/SumatraPDF.exe',
+          },
         ]
       }
     }
