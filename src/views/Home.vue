@@ -26,9 +26,9 @@ export default {
     return {
       menus: [
         { title: "Pedidos", color: "var(--primary-color)", icon: "mdi-basket", route: '/orders', src: 'https://p4.wallpaperbetter.com/wallpaper/470/622/407/burger-4k-background-image-hd-wallpaper-preview.jpg' },
-        { title: "Produtos", color: "green", icon: "mdi-food", src: 'https://img.freepik.com/fotos-gratis/vista-lateral-de-batatas-fritas-com-tempero_141793-4899.jpg?w=2000',route: '/products' },
-        { title: "Categorias", color: "blue", icon: "mdi-format-list-bulleted-square", src: 'https://images.alphacoders.com/276/276653.jpg',route: '/categories' },
-        { title: "Configurações", color: "yellow", icon: "mdi-cog", src: 'http://i.mlcdn.com.br/portaldalu/fotosconteudo/43225.jpg',route: '/' },
+        { title: "Produtos", color: "green", icon: "mdi-food", src: 'https://img.freepik.com/fotos-gratis/vista-lateral-de-batatas-fritas-com-tempero_141793-4899.jpg?w=2000', route: '/products' },
+        { title: "Categorias", color: "blue", icon: "mdi-format-list-bulleted-square", src: 'https://images.alphacoders.com/276/276653.jpg', route: '/categories' },
+        { title: "Configurações", color: "yellow", icon: "mdi-cog", src: 'http://i.mlcdn.com.br/portaldalu/fotosconteudo/43225.jpg', route: '/home' },
       ]
     }
   },

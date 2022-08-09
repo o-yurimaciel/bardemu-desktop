@@ -72,7 +72,7 @@ import log from '../logConfig'
     data: () => ({
       categories:[],
       items: [
-        { text: 'Home', to: '/' }
+        { text: 'Home', to: '/home' }
       ]
     }),
     mounted() {
@@ -113,6 +113,9 @@ import log from '../logConfig'
             bardemu.delete('/category', {
               data: {
                 _id: id
+              },
+              headers: {
+                "x-access-token": this.$store.state.token
               }
             }).then((res) => {
               console.log(res)

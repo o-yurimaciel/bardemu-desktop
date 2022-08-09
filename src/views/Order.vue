@@ -243,7 +243,7 @@ export default {
   data() {
     return {
       breadCrumbs: [
-        { text: 'Home', to: '/' },
+        { text: 'Home', to: '/home' },
         { text: 'Pedidos', to: '/orders' }
       ],
       order: {},
@@ -372,6 +372,9 @@ export default {
       }, {
         params: {
           _id: this.order._id
+        },
+        headers: {
+          "x-access-token": this.$store.state.token
         }
       }).then((res) => {
         if(res.data.message) {

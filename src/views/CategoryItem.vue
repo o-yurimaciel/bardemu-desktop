@@ -81,7 +81,7 @@ export default {
       },
       oldName: "",
       items: [
-        { text: 'Home', to: '/' },
+        { text: 'Home', to: '/home' },
         { text: 'Categorias', to: '/categories' }
       ]
     }
@@ -96,7 +96,11 @@ export default {
   methods: {
     createCategory() {
       console.log(this.category)
-      bardemu.post('/category', this.category).then((res) => {
+      bardemu.post('/category', this.category, {
+        headers: {
+          "x-access-token": this.$store.state.token
+        }
+      }).then((res) => {
         console.log(res)
         this.$router.push('/categories')
         this.$store.dispatch('openAlert', {
@@ -125,6 +129,9 @@ export default {
       bardemu.put('/category', this.category, {
         params: {
           _id: this.id
+        },
+        headers: {
+          "x-access-token": this.$store.state.token
         }
       }).then((res) => {
         console.log(res)

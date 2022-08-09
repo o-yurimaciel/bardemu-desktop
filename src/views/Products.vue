@@ -29,21 +29,21 @@
       </v-row>
       <v-col class="pa-0 pt-10">
         <v-row no-gutters>
-          <v-col cols="3" lg="3" class="pa-0 pa-1" v-for="product in products" :key="product._id">
+          <v-col cols="3" lg="2" class="pa-0 pa-5" v-for="product in products" :key="product._id">
             <v-card
               class="mx-auto"
-              min-width="100"
+              width="350"
               title="Editar Produto"
               height="100%"
               @click="editProduct(product)"
             >
               <v-img
-                height="150"
-                max-width="300"
+                height="200"
+                max-width="100%"
                 style="object-fit: contain"
                 :src="product.image ? product.image : 'https://fermello.com.br/wp-content/themes/consultix/images/no-image-found-360x260.png'"
               ></v-img>
-              <v-card-title>{{product.name}}</v-card-title>
+              <v-card-title style="word-break: break-word">{{product.name}}</v-card-title>
               <v-card-text>
                 <div>
                   <span class="product-description" style="fontSize: 1em" v-if="product.category">
@@ -56,7 +56,7 @@
               </v-card-text>
               <v-card-text>
                 <div>
-                  <span class="product-description" style="fontSize: 1em" v-if="product.description">
+                  <span class="product-description" style="fontSize: 1em;word-break: break-word" v-if="product.description">
                     {{product.description}}
                   </span>
                 </div>
@@ -85,7 +85,7 @@ export default {
     return {
       products: [],
       items: [
-        { text: 'Home', to: '/', icon: 'mdi-home' }
+        { text: 'Home', to: '/home', icon: 'mdi-home' }
       ]
     }
   },

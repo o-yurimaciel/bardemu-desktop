@@ -74,7 +74,7 @@ export default {
       handlingh: false,
       itemsPerPage: 5,
       breadCrumbs: [
-        { text: 'Home', to: '/' }
+        { text: 'Home', to: '/home' }
       ],
       headers: [
         {
@@ -140,7 +140,11 @@ export default {
     getOrders() {
       this.orders = []
       this.handlingh = true
-      bardemu.get('/orders').then((res) => {
+      bardemu.get('/orders', {
+        headers: {
+          "x-access-token": this.$store.state.token
+        }
+      }).then((res) => {
         console.log(res)
         this.orders = res.data.sort((a, b) => {
           return new Date(a.createdAt) < new Date(b.createdAt) ? 1 : -1

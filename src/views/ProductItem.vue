@@ -154,7 +154,7 @@ export default {
       },
       oldName: "",
       items: [
-        { text: 'Home', to: '/' },
+        { text: 'Home', to: '/home' },
         { text: 'Produtos', to: '/products' },
       ]
     }
@@ -187,7 +187,11 @@ export default {
     },
     createProduct() {
       console.log(this.product)
-      bardemu.post('/product', this.product).then((res) => {
+      bardemu.post('/product', this.product, {
+        headers: {
+          "x-access-token": this.$store.state.token
+        }
+      }).then((res) => {
         console.log(res)
         this.$router.push('/products')
         this.$store.dispatch('openAlert', {
@@ -216,6 +220,9 @@ export default {
       bardemu.put('/product', this.product, {
         params: {
           _id: this.id
+        },
+        headers: {
+          "x-access-token": this.$store.state.token
         }
       }).then((res) => {
         console.log(res)
@@ -276,6 +283,9 @@ export default {
             bardemu.delete('/product', {
               data: {
                 _id: this.product._id
+              },
+              headers: {
+                "x-access-token": this.$store.state.token
               }
             }).then((res) => {
               console.log(res)
