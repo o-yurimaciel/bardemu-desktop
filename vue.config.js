@@ -33,7 +33,7 @@ module.exports = {
         productName: "BarDeMu Lanches",
         publish: {
           provider: 'github',
-          // private: true,
+          private: true,
           owner: "yrimaciel",
           repo: "bardemu-desktop"
         },
