@@ -7,10 +7,9 @@
       <v-col class="pa-0 d-flex align-center" style="height: 100vh;background-color: #cecece">
         <v-col cols="12" lg="8" class="pa-0 d-flex flex-column justify-center mx-auto pa-10">
           <v-col class="pa-0 pb-3">
-            <label style="color: #000; font-weight: bold" for="login">Usuário</label>
             <v-text-field
-            rounded
             id="login"
+            label="Usuário"
             color="var(--primary-color)"
             autofocus
             outlined
@@ -23,10 +22,9 @@
             </v-text-field>
           </v-col>
           <v-col class="pa-0">
-            <label style="color: #000; font-weight: bold" for="password">Senha</label>
             <v-text-field
-            rounded
             color="var(--primary-color)"
+            label="Senha"
             id="password"
             background-color="#fff"
             v-model="password"
@@ -94,10 +92,12 @@ export default {
       }).catch((e) => {
         console.log(e.response)
         this.handlingh = false
-        this.$store.dispatch('openAlert', {
-          message: e.response.data ? e.response.data.message : `Erro de autenticação`,
-          type: 'error'
-        })
+        if(e.response && e.response.data) {
+          this.$store.dispatch('openAlert', {
+            message: e.response.data ? e.response.data.message : `Erro de autenticação`,
+            type: 'error'
+          })
+        }
       })
     }
   }

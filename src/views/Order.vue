@@ -170,6 +170,7 @@
                       <v-text-field
                       v-model="estimatedTime"
                       :error="!estimatedTime"
+                      color="var(--primary-color)"
                       :autofocus="true"
                       >
                       </v-text-field>
@@ -201,12 +202,13 @@
                     <v-col class="pa-0 d-flex flex-column">
                       <span style="font-weight: bold">O que {{order.clientName}} achou do pedido?</span>
                       <v-col cols="6" class="pa-0 pt-5">
-                        <v-row no-gutters class="d-flex align-center justify-space-between">
-                          <span style="font-weight: bold">{{order.feedback.rating}}</span>
+                        <v-row no-gutters class="d-flex align-center">
+                          <span style="font-weight: bold" class="pr-2">{{order.feedback.rating}}</span>
                           <v-rating
                             v-model="order.feedback.rating"
                             icon-label="custom icon label text {0} of {1}"
                             :title="order.feedback.rating + ' estrelas'"
+                            class="pr-2"
                             color="yellow"
                             dense
                             background-color="var(--primary-color)"
@@ -275,6 +277,9 @@ export default {
       bardemu.get('/order', {
         params: {
           _id: id
+        },
+        headers: {
+          "x-access-token": this.$store.state.token
         }
       }).then((res) => {
         this.handlingh = false
@@ -294,11 +299,13 @@ export default {
         console.log(res)
       }).catch((e) => {
         this.handlingh = false
-        log.error('Erro ao consultar pedido ' + JSON.stringify(e.response.data))
-        this.$store.dispatch('openAlert', {
-          message: e.response.data ? e.response.data.message : `Erro ao consultar pedido`,
-          type: 'error'
-        })
+        if(e.response && e.response.data) {
+          log.error('Erro ao consultar pedido ' + JSON.stringify(e.response.data))
+          this.$store.dispatch('openAlert', {
+            message: e.response.data ? e.response.data.message : `Erro ao consultar pedido`,
+            type: 'error'
+          })
+        }
         console.log(e.response)
       })
     },
@@ -383,21 +390,13 @@ export default {
         this.getOrder(this.order._id)
         console.log(res)
       }).catch((e) => {
-        log.error('Erro ao atualizar pedido ' + JSON.stringify(e.response.data))
-        if(e.response.status === 403) {
-          this.$store.commit('setToken', null)
+        if(e.response && e.response.data) {
+          log.error('Erro ao atualizar pedido ' + JSON.stringify(e.response.data))
           this.$store.dispatch('openAlert', {
-            message: 'Token de autorização expirado',
-            type: "error"
+            message: e.response.data ? e.response.data.message : `Erro ao atualizar pedido`,
+            type: 'error'
           })
-          this.$router.push('/')
-          return 
         }
-        this.$store.dispatch('openAlert', {
-          message: e.response.data ? e.response.data.message : `Erro ao atualizar pedido`,
-          type: 'error'
-        })
-        console.log(e)
       })
     },
     updateStatusOptions() {

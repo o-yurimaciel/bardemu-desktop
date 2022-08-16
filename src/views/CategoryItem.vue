@@ -29,21 +29,21 @@
           <v-col cols="6" class="pa-0">
             <v-form v-model="isFormValid" @submit.prevent>
               <v-col class="pa-0">
-                <label for="name">Nome</label>
                 <v-text-field
                 outlined
-                rounded
+                label="Nome"
                 autofocus
+                color="var(--primary-color)"
                 v-model="category.name"
                 id="name"
                 >
                 </v-text-field>
               </v-col>
               <v-col class="pa-0">
-                <label for="order">Ordem</label>
                 <v-text-field
+                label="Ordem"
                 outlined
-                rounded
+                color="var(--primary-color)"
                 v-model="category.order"
                 id="order"
                 >
@@ -108,21 +108,13 @@ export default {
           type: 'success'
         })
       }).catch((e =>  {
-        log.error('Erro ao criar categoria' + JSON.stringify(e.response.data))
-        if(e.response.status === 403) {
-          this.$store.commit('setToken', null)
+        if(e.response && e.response.data) {
+          log.error('Erro ao criar categoria' + JSON.stringify(e.response.data))
           this.$store.dispatch('openAlert', {
-            message: 'Token de autorização expirado',
-            type: "error"
+            message: e.response.data ? e.response.data.message : `Erro ao criar categoria`,
+            type: 'error'
           })
-          this.$router.push('/')
-          return 
         }
-        this.$store.dispatch('openAlert', {
-          message: e.response.data ? e.response.data.message : `Erro ao criar categoria`,
-          type: 'error'
-        })
-        console.log(e.response)
       }))
     },
     updateCategory() {
@@ -141,21 +133,13 @@ export default {
           type: 'success'
         })
       }).catch((e) => {
-        log.error('Erro ao atualizar categoria ' + JSON.stringify(e.response.data))
-        if(e.response.status === 403) {
-          this.$store.commit('setToken', null)
+        if(e.response && e.response.data) {
+          log.error('Erro ao atualizar categoria ' + JSON.stringify(e.response.data))
           this.$store.dispatch('openAlert', {
-            message: 'Token de autorização expirado',
-            type: "error"
+            message: e.response.data ? e.response.data.message : `Erro ao atualizar categoria`,
+            type: 'error'
           })
-          this.$router.push('/')
-          return 
         }
-        this.$store.dispatch('openAlert', {
-          message: e.response.data ? e.response.data.message : `Erro ao atualizar categoria`,
-          type: 'error'
-        })
-        console.log(e.response)
       })
     },
     getCategory() {
@@ -168,11 +152,13 @@ export default {
         this.category = res.data
         console.log(res)
       }).catch((e) => {
-        log.error('Erro ao consultar categorias ' + JSON.stringify(e.response.data))
-        this.$store.dispatch('openAlert', {
-          message: e.response.data ? e.response.data.message : `Erro ao consultar categorias`,
-          type: 'error'
-        })
+        if(e.response && e.response.data) {
+          log.error('Erro ao consultar categorias ' + JSON.stringify(e.response.data))
+          this.$store.dispatch('openAlert', {
+            message: e.response.data ? e.response.data.message : `Erro ao consultar categorias`,
+            type: 'error'
+          })
+        }
       })
     },
   }
@@ -185,7 +171,7 @@ export default {
   font-family: 'Kaushan Script', sans-serif;
   letter-spacing: 4px;
   font-weight: bold;
-  font-size: 3.5em;
+  font-size: 3em;
   text-shadow: 1px 1px 3px black!important;
 }
 

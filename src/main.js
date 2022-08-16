@@ -9,6 +9,7 @@ import log from './logConfig'
 import { ipcRenderer } from 'electron'
 import { EventBus } from './EventBus'
 import store from './store'
+import { bardemu } from './services'
 
 Vue.config.productionTip = false
 
@@ -66,61 +67,96 @@ ipcRenderer.on('print-reply', (event, printed) => {
 })
 
 function wsConnect() {
-  const server = process.env.VUE_APP_WS_SERVER
-
-  var connection = new WebSocket(server)
+  try {
+    const server = process.env.VUE_APP_WS_SERVER
   
-  connection.onopen = (event) => {
-    store.dispatch('openAlert', {
-      message: 'A conexão com o servidor foi estabelecida.',
-      type: 'success'
-    })
-    log.info(`[WS] open ${JSON.stringify(event)}`)
-  }
-
-  connection.onclose = (event) => {
-    log.info(`[WS] onclose ${JSON.stringify(event)}`)
-    store.dispatch('openAlert', {
-      message: 'A comunicação com o servidor foi perdida.',
-      type: 'error'
-    })
-
-    connection.onerror = null
-
-    setTimeout(() => {
-      wsConnect()
-    }, 15000);
-  }
-  
-  connection.onerror = (event) => {
-    log.info(`[WS] onerror ${JSON.stringify(event)}`)
-    store.dispatch('openAlert', {
-      message: 'A comunicação com o servidor foi perdida.',
-      type: 'error'
-    })
-
-    connection.onclose = null
-
-    setTimeout(() => {
-      wsConnect()
-    }, 15000);
-  }
-  
-  connection.onmessage = (event) => {
-    const data = event && event.data ? JSON.parse(event.data) : null
-    if(data && data.type && data._doc) {
-      switch(data.type) {
-        case "order":
-          ipcRenderer.send('order-notification')
-          EventBus.$emit('new-order', data._doc)
-          break
-        case "feedback":
-          ipcRenderer.send('feedback-notification', data._doc)
-          break
-      }
-  
+    var connection = new WebSocket(server)
+    
+    connection.onopen = (event) => {
+      store.dispatch('openAlert', {
+        message: 'A conexão com o servidor foi estabelecida.',
+        type: 'success'
+      })
+      log.info(`[WS] open ${JSON.stringify(event)}`)
     }
+  
+    connection.onclose = (event) => {
+      log.info(`[WS] onclose ${JSON.stringify(event)}`)
+      store.dispatch('openAlert', {
+        message: 'A comunicação com o servidor foi perdida.',
+        type: 'error'
+      })
+  
+      connection.onerror = null
+  
+      setTimeout(() => {
+        wsConnect()
+      }, 5000);
+    }
+    
+    connection.onerror = (event) => {
+      log.info(`[WS] onerror ${JSON.stringify(event)}`)
+      store.dispatch('openAlert', {
+        message: 'A comunicação com o servidor foi perdida.',
+        type: 'error'
+      })
+  
+      connection.onclose = null
+  
+      setTimeout(() => {
+        wsConnect()
+      }, 5000);
+    }
+    
+    connection.onmessage = (event) => {
+      const data = event && event.data && typeof event.data === 'object' ? JSON.parse(event.data) : null
+      if(data && data.type && data._doc) {
+        switch(data.type) {
+          case "order":
+            ipcRenderer.send('order-notification')
+            EventBus.$emit('new-order', data._doc)
+            break
+          case "feedback":
+            ipcRenderer.send('feedback-notification', data._doc)
+            break
+        }
+      }
+    }
+  
+    setInterval(() => {
+      if(connection.readyState === connection.OPEN) {
+        connection.send("hello")
+      }
+    }, 1000);
+  } catch (error) {
+    log.error(`[WS] ${JSON.stringify(error)}`)
   }
 }
 
 wsConnect()
+
+bardemu.interceptors.response.use(
+  res => res,
+  err => {
+    const statusCode = err.response.status
+    if (statusCode === 401 || statusCode === 403) {
+      store.commit('setToken', null)
+      store.dispatch('openAlert', {
+        message: 'A autenticação falhou. Por favor, faça o login.',
+        type: "error"
+      })
+      router.push('/')
+      return
+    } else {
+      if(!err.response || !err.response.data) {
+        store.dispatch('openAlert', {
+          message: 'Ocorreu um problema. Tente novamente mais tarde.',
+          type: "error"
+        })
+      } else {
+        throw err
+      }
+    }
+    throw err
+  }
+)

@@ -85,12 +85,13 @@ import log from '../logConfig'
           this.categories = res.data.sort((a,b) => a.order - b.order)
           console.log(res)
         }).catch((e) => {
-          log.error('Erro ao consultar categorias ' + JSON.stringify(e.response.data))
-          this.$store.dispatch('openAlert', {
-            message: e.response.data ? e.response.data.message : `Erro ao consultar categorias`,
-            type: 'error'
-          })
-          console.log(e.response)
+          if(e.response && e.response.data) {
+            log.error('Erro ao consultar categorias ' + JSON.stringify(e.response.data))
+            this.$store.dispatch('openAlert', {
+              message: e.response.data ? e.response.data.message : `Erro ao consultar categorias`,
+              type: 'error'
+            })
+          }
         })
       },
       addCategory() {
@@ -125,20 +126,13 @@ import log from '../logConfig'
               })
               this.getCategories()
             }).catch((e) => {
-              log.error('Erro ao remover categoria ' + JSON.stringify(e.response.data))
-              if(e.response.status === 403) {
-                this.$store.commit('setToken', null)
+              if(e.response && e.response.data) {
+                log.error('Erro ao remover categoria ' + JSON.stringify(e.response.data))
                 this.$store.dispatch('openAlert', {
-                  message: 'Token de autorização expirado',
-                  type: "error"
+                  message: e.response.data ? e.response.data.message : `Erro ao remover categoria`,
+                  type: 'error'
                 })
-                this.$router.push('/')
-                return 
               }
-              this.$store.dispatch('openAlert', {
-                message: e.response.data ? e.response.data.message : `Erro ao remover categoria`,
-                type: 'error'
-              })
             })
           }
         })
@@ -201,7 +195,7 @@ h1 {
   font-family: 'Kaushan Script', sans-serif;
   letter-spacing: 4px;
   font-weight: bold;
-  font-size: 3.5em;
+  font-size: 3em;
   text-shadow: 1px 1px 3px black!important;
 }
 </style>

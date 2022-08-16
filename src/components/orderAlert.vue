@@ -16,7 +16,7 @@
         </v-col>
         <v-col class="pa-0 d-flex justify-center pt-5">
           <v-btn 
-          rounded
+          
           class="text-capitalize"
           color="var(--primary-color)"
           @click="goToOrder(orders[0]._id)" 
@@ -28,7 +28,6 @@
             <span style="color: #fff">Pedido</span>
           </v-btn>
           <v-btn
-          rounded
           class="text-capitalize"
           color="var(--primary-color)"
           v-else 

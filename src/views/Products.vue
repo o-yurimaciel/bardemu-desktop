@@ -29,7 +29,7 @@
       </v-row>
       <v-col class="pa-0 pt-10">
         <v-row no-gutters>
-          <v-col cols="3" lg="2" class="pa-0 pa-5" v-for="product in products" :key="product._id">
+          <v-col cols="6" lg="4" class="pa-0 pa-5" v-for="product in products" :key="product._id">
             <v-card
               class="mx-auto"
               width="350"
@@ -106,11 +106,13 @@ export default {
         this.products = res.data
         console.log(res)
       }).catch((e) => {
-        log.error('Erro ao consultar produtos ' + JSON.stringify(e.response.data))
-        this.$store.dispatch('openAlert', {
-          message: e.response.data ? e.response.data.message : `Erro ao consultar produtos`,
-          type: 'error'
-        })
+        if(e.response && e.response.data) {
+          log.error('Erro ao consultar produtos ' + JSON.stringify(e.response.data))
+          this.$store.dispatch('openAlert', {
+            message: e.response.data ? e.response.data.message : `Erro ao consultar produtos`,
+            type: 'error'
+          })
+        }
         console.log(e.response)
       })
     }
@@ -135,7 +137,7 @@ h1 {
   font-family: 'Kaushan Script', sans-serif;
   letter-spacing: 4px;
   font-weight: bold;
-  font-size: 3.5em;
+  font-size: 3em;
   text-shadow: 1px 1px 3px black!important;
 }
 </style>

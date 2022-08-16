@@ -153,21 +153,13 @@ export default {
       }).catch((e) => {
         console.log(e.response)
         this.handlingh = false
-        log.error('Erro ao consultar pedidos ' + JSON.stringify(e.response.data))
-
-        if(e.response.status === 403) {
-          this.$store.commit('setToken', null)
+        if(e.response && e.response.data) {
+          log.error('Erro ao consultar pedidos ' + JSON.stringify(e.response.data))
           this.$store.dispatch('openAlert', {
-            message: 'Token de autorização expirado',
-            type: "error"
+            message: e.response.data ? e.response.data.message : `Erro ao consultar pedidos`,
+            type: 'error'
           })
-          this.$router.push('/')
-          return 
         }
-        this.$store.dispatch('openAlert', {
-          message: e.response.data ? e.response.data.message : `Erro ao consultar pedidos`,
-          type: 'error'
-        })
       })
     },
     formatStatus(status) {
@@ -257,7 +249,7 @@ h1 {
   font-family: 'Kaushan Script', sans-serif;
   letter-spacing: 4px;
   font-weight: bold;
-  font-size: 3.5em;
+  font-size: 3em;
   text-shadow: 1px 1px 3px black!important;
 }
 </style>

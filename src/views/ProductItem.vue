@@ -18,7 +18,7 @@
         {{edit ? `Editar Produto "${oldName}"` : 'Criar Produto' }}
       </span>
     </v-col>
-    <v-col class="pa-0 pt-15 pb-15 d-flex justify-center">
+    <v-col class="pa-0 pt-5 pb-15 d-flex justify-center">
       <v-card 
       width="70%"
       class="elevation-3 pa-10"
@@ -26,6 +26,7 @@
         <v-btn
           color="red"
           small
+          v-if="product._id"
           style="position: absolute;top:5px;right:5px;z-index: 100"
           @click="deleteProduct(product, product.name)"
           title="Excluir produto"
@@ -34,15 +35,15 @@
             mdi-delete
           </v-icon>
         </v-btn>
-        <v-row no-gutters class="d-flex justify-center">
-          <v-col lg="7" cols="10" class="pa-0">
+        <v-row no-gutters class="d-flex justify-space-between pt-5">
+          <v-col cols="6" class="pa-0 pr-10">
             <v-form v-model="isFormValid" @submit.prevent>
               <v-col class="pa-0">
-                <label for="category">Categoria</label>
                 <v-select
                 outlined
+                label="Categoria"
                 :items="categories"
-                rounded
+                color="var(--primary-color)"
                 :value="product.category"
                 v-model="product.category"
                 id="category"
@@ -50,39 +51,40 @@
                 </v-select>
               </v-col>
               <v-col class="pa-0">
-                <label for="name">Nome</label>
                 <v-text-field
                 outlined
-                rounded
+                color="var(--primary-color)"
+                label="Nome"
                 v-model="product.name"
                 id="name"
                 >
                 </v-text-field>
               </v-col>
               <v-col class="pa-0">
-                <label for="name">Descrição</label>
                 <v-text-field
                 outlined
-                rounded
+                color="var(--primary-color)"
+                label="Descrição"
                 v-model="product.description"
                 id="description"
                 >
                 </v-text-field>
               </v-col>
               <v-col class="pa-0">
-                <label for="name">Preço</label>
                 <v-currency-field
                 v-model="product.price"
                 outlined
-                rounded
+                color="var(--primary-color)"
+                label="Preço"
                 id="description"
                 >
                 </v-currency-field>
               </v-col>
               <v-col class="pa-0">
-                <label for="name">Foto</label>
                 <v-file-input
                   truncate-length="15"
+                  label="Foto"
+                  color="var(--primary-color)"
                   @change="changeFile"
                 ></v-file-input>
               </v-col>
@@ -97,7 +99,7 @@
               </v-col>
             </v-form>
           </v-col>
-          <v-col cols="10" lg="5" class="pa-0 d-flex flex-grow-0 justify-center pt-lg-0 pt-10">
+          <v-col cols="6" class="pa-0 d-flex flex-grow-0 justify-center pt-lg-0">
               <v-card
                 class="mx-auto"
                 min-width="400"
@@ -178,11 +180,13 @@ export default {
         })
       }).catch((e) => {
         console.log(e.response)
-        log.error('Erro ao consultar categorias ' + JSON.stringify(e.response.data))
-        this.$store.dispatch('openAlert', {
-          message: e.response.data ? e.response.data.message : `Erro ao consultar categorias`,
-          type: 'error'
-        })
+        if(e.response && e.response.data) {
+          log.error('Erro ao consultar categorias ' + JSON.stringify(e.response.data))
+          this.$store.dispatch('openAlert', {
+            message: e.response.data ? e.response.data.message : `Erro ao consultar categorias`,
+            type: 'error'
+          })
+        }
       })
     },
     createProduct() {
@@ -199,20 +203,13 @@ export default {
           type: 'success'
         })
       }).catch((e =>  {
-        log.error('Erro ao criar produto ' + JSON.stringify(e.response.data))
-        if(e.response.status === 403) {
-          this.$store.commit('setToken', null)
+        if(e.response && e.response.data) {
+          log.error('Erro ao criar produto ' + JSON.stringify(e.response.data))
           this.$store.dispatch('openAlert', {
-            message: 'Token de autorização expirado',
-            type: "error"
+            message: e.response.data ? e.response.data.message : `Erro ao criar produto`,
+            type: 'error'
           })
-          this.$router.push('/')
-          return 
         }
-        this.$store.dispatch('openAlert', {
-          message: e.response.data ? e.response.data.message : `Erro ao criar produto`,
-          type: 'error'
-        })
         console.log(e.response)
       }))
     },
@@ -232,21 +229,13 @@ export default {
           type: 'success'
         })
       }).catch((e) => {
-        log.error('Erro ao atualizar produto ' + JSON.stringify(e.response.data))
-        if(e.response.status === 403) {
-          this.$store.commit('setToken', null)
+        if(e.response && e.response.data) {
+          log.error('Erro ao atualizar produto ' + JSON.stringify(e.response.data))
           this.$store.dispatch('openAlert', {
-            message: 'Token de autorização expirado',
-            type: "error"
+            message: e.response.data ? e.response.data.message : `Erro ao atualizar produto`,
+            type: 'error'
           })
-          this.$router.push('/')
-          return 
         }
-        this.$store.dispatch('openAlert', {
-          message: e.response.data ? e.response.data.message : `Erro ao atualizar produto`,
-          type: 'error'
-        })
-        console.log(e.response)
       })
     },
     getProduct() {
@@ -260,12 +249,13 @@ export default {
         this.product = res.data
         console.log(res)
       }).catch((e) => {
-        log.error('Erro ao consultar produto ' + JSON.stringify(e.response.data))
-        this.$store.dispatch('openAlert', {
-          message: e.response.data ? e.response.data.message : `Erro ao consultar produto`,
-          type: 'error'
-        })
-        console.log(e.response)
+        if(e.response && e.response.data) {
+          log.error('Erro ao consultar produto ' + JSON.stringify(e.response.data))
+          this.$store.dispatch('openAlert', {
+            message: e.response.data ? e.response.data.message : `Erro ao consultar produto`,
+            type: 'error'
+          })
+        }
       })
     },
     deleteProduct() {
@@ -295,21 +285,13 @@ export default {
                 type: 'success'
               })
             }).catch((e) => {
-              console.log(e)
-              log.error('Erro ao remover produto ' + JSON.stringify(e.response.data))
-              if(e.response.status === 403) {
-                this.$store.commit('setToken', null)
+              if(e.response && e.response.data) {
+                log.error('Erro ao remover produto ' + JSON.stringify(e.response.data))
                 this.$store.dispatch('openAlert', {
-                  message: 'Token de autorização expirado',
-                  type: "error"
+                  message: e.response.data ? e.response.data.message : `Erro ao remover produto`,
+                  type: 'error'
                 })
-                this.$router.push('/')
-                return 
               }
-              this.$store.dispatch('openAlert', {
-                message: e.response.data ? e.response.data.message : `Erro ao remover produto`,
-                type: 'error'
-              })
             })
           }
         })
@@ -349,7 +331,7 @@ export default {
   font-family: 'Kaushan Script', sans-serif;
   letter-spacing: 4px;
   font-weight: bold;
-  font-size: 3.5em;
+  font-size: 3em;
   text-shadow: 1px 1px 3px black!important;
 }
 </style>
