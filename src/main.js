@@ -109,7 +109,8 @@ function wsConnect() {
     }
     
     connection.onmessage = (event) => {
-      const data = event && event.data && typeof event.data === 'object' ? JSON.parse(event.data) : null
+      const data = event && event.data ? JSON.parse(event.data) : null
+
       if(data && data.type && data._doc) {
         switch(data.type) {
           case "order":
