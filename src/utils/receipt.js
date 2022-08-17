@@ -38,7 +38,7 @@ export default function receipt(text) {
         
         __________________________________________________
 
-        Entrega: R$${formatBRL(0)}
+        Entrega: R$${formatBRL(text.deliveryPrice)}
         Total a pagar: R$${formatBRL(text.totalValue)}
         ${text.paymentType === 'Dinheiro' ? `Troco: R$${formatBRL(text.cashChange)}` : ''}
       `, 10, 10)
