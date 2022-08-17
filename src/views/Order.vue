@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-0 ma-0 wrapper">
+  <v-container fluid class="pa-0 ma-0 wrapper-orders">
     <v-col class="pa-0 d-flex flex-column flex-grow-0 pt-10">
       <v-col offset="1" class="pa-0">
         <v-breadcrumbs
@@ -31,7 +31,7 @@
               title="Atualizar"
               :class="handlingh ? 'rotatingAnimation' : ''" 
               >mdi-refresh-circle</v-icon>
-              <v-icon size="30" @click="openWhatsApp" color="green" title="Falar com o cliente">mdi-whatsapp</v-icon>
+              <v-icon size="30" @click="openWhatsApp(null)" color="green" title="Falar com o cliente">mdi-whatsapp</v-icon>
               <v-icon size="30" @click="printOrder" color="black" title="Imprimir detalhamento">mdi-printer</v-icon>
             </v-row>
           </div>
@@ -40,7 +40,7 @@
               {{ formatStatus(order.orderStatus) }}
             </span>
           </v-col>
-          <v-col cols="10" class="pa-0 d-flex justify-center pt-3 align-center mx-auto" v-if="order.estimatedTime">
+          <v-col cols="10" class="pa-0 d-flex justify-center pt-3 align-center mx-auto" v-if="order.estimatedTime && order.orderStatus === 'CONFIRMED' || order.orderStatus === 'OUT_FOR_DELIVERY'">
             <v-icon color="var(--primary-color)">mdi-clock-fast</v-icon>
             <span class="ml-2">
               Tempo estimado para entrega: {{order.estimatedTime}}min
@@ -111,7 +111,7 @@
                           </span>
                         </v-col>
                         <v-col class="pa-0" v-if="product.note">
-                          <span class="product-description">
+                          <span class="product-description" style="white-space: pre-line">
                             Observação: {{product.note}}
                           </span>
                         </v-col>
@@ -291,7 +291,7 @@ export default {
           { description: 'Bandeira', value: this.order.flag }
         ]
         this.details = [
-          { description: 'Entrega', value: '0' },
+          { description: 'Entrega', value: this.order.deliveryPrice },
           { description: 'Total a pagar', value: this.order.totalValue },
           { description: 'Troco', value: this.order.cashChange },
         ]

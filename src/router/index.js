@@ -10,6 +10,12 @@ import CategoryItem from '../views/CategoryItem.vue'
 import Login from '../views/Login.vue'
 import store from '../store'
 import log from '../logConfig'
+import Administrative from '../views/Administrative.vue'
+import Configs from '../views/Configs.vue'
+import Clients from '../views/Clients.vue'
+import Feedbacks from '../views/Feedbacks.vue'
+import DeliveryConfig from '../views/DeliveryConfig.vue'
+import DistrictItem from '../views/DistrictItem.vue'
 
 Vue.use(VueRouter)
 
@@ -41,6 +47,22 @@ const routes = [
       auth(to, from, next)
     },
     component: Home
+  }, 
+  {
+    path: '/adm',
+    name: 'Administrative',
+    beforeEnter: (to, from, next) => {
+      auth(to, from, next)
+    },
+    component: Administrative
+  }, 
+  {
+    path: '/configs',
+    name: 'Configs',
+    beforeEnter: (to, from, next) => {
+      auth(to, from, next)
+    },
+    component: Configs
   }, 
   {
     path: '/orders',
@@ -90,7 +112,38 @@ const routes = [
     name: 'category-item',
     component: CategoryItem
   },
-  
+  {
+    path: '/clients',
+    beforeEnter: (to, from, next) => {
+      auth(to, from, next)
+    },
+    name: 'clients',
+    component: Clients
+  },
+  {
+    path: '/feedbacks',
+    beforeEnter: (to, from, next) => {
+      auth(to, from, next)
+    },
+    name: 'feedbacks',
+    component: Feedbacks
+  }, 
+  {
+    path: '/delivery-config',
+    beforeEnter: (to, from, next) => {
+      auth(to, from, next)
+    },
+    name: 'delivery-config',
+    component: DeliveryConfig
+  },
+  {
+    path: '/district/:id?',
+    beforeEnter: (to, from, next) => {
+      auth(to, from, next)
+    },
+    name: 'district-item',
+    component: DistrictItem
+  },
 ]
 
 const router = new VueRouter({

@@ -16,45 +16,41 @@
               </v-breadcrumbs-item>
             </template>
           </v-breadcrumbs>
-          <span class="page-title">Produtos</span>
+          <span class="page-title">Bairros</span>
         </v-col>
         <v-col class="pa-0 d-flex justify-end pt-lg-0">
           <v-btn 
           color="green"
           class="text-capitalize"
           >
-            <span @click="addProduct" style="color: #fff">Adicionar Produto</span>
+            <span @click="addDistrict" style="color: #fff">Adicionar bairro</span>
           </v-btn>
         </v-col>
       </v-row>
       <v-col cols="12" class="pa-0 mx-auto content pt-10 mb-15">
         <table style="width: 100%" class="elevation-1">
           <tr style="backgroundColor: #fff">
-            <th>Categoria</th>
             <th>Nome</th>
-            <th>Descrição</th>
             <th>Preço</th>
             <th>Ações</th>
           </tr>
-          <tbody v-for="product in products" :key="product._id">
+          <tbody v-for="district in districts" :key="district._id">
             <tr>
-              <td>{{product.category}}</td>
-              <td>{{product.name}}</td>
-              <td>{{getDescription(product.description)}}</td>
-              <td>{{product.price | currency}}</td>
+              <td>{{district.name}}</td>
+              <td>{{district.price | currency}}</td>
               <td>
                 <v-btn 
                 class="mr-2"
                 color="green"
                 small
-                @click="editProduct(product._id)"
+                @click="editDistrict(district._id)"
                 >
                   <v-icon color="#FFF">mdi-pencil</v-icon>
                 </v-btn>
                 <v-btn
                 color="red"
                 small
-                @click="deleteProduct(product._id, product.name)"
+                @click="deleteDistrict(district._id, district.name)"
                 >
                   <v-icon color="#fff">mdi-delete</v-icon>
                 </v-btn>
@@ -75,7 +71,7 @@ import { remote } from 'electron'
 export default {
   data() {
     return {
-      products: [],
+      districts: [],
       items: [
         { text: 'Home', to: '/home' },
         { text: 'Configurações', to: '/configs' },
@@ -83,81 +79,75 @@ export default {
     }
   },
   mounted() {
-    this.getProductList()
+    this.getDistrictList()
   },
   methods: {
-    getDescription(description) {
-      if(description && description.length > 20) {
-        return description.substring(0, 20).concat('...')
-      } else {
-        return description
-      }
+    editDistrict(id) {
+      this.$router.push(`/district/${id}`)
     },
-    editProduct(id) {
-      this.$router.push(`/product/${id}`)
-    },
-    addProduct() {
+    addDistrict() {
       this.$router.push({
-        name: 'product-item'
+        name: 'district-item'
       })
     },
-    deleteProduct(id, name) {
-        const dialogOpts = {
-          type: "question",
-          buttons: [
-            'Sim', 'Não'
-          ],
-          title: 'Remover produto',
-          detail: `Tem certeza que deseja remover o produto "${name}"?`
-        }
-
-        remote.dialog.showMessageBox(dialogOpts).then((res) => {
-          if (res && res.response == 0) {
-            bardemu.delete('/product', {
-              data: {
-                _id: id
-              },
-              headers: {
-                "x-access-token": this.$store.state.token
-              }
-            }).then((res) => {
-              console.log(res)
-              this.$store.dispatch('openAlert', {
-                message: 'Produto removido',
-                type: 'success'
-              })
-              this.getCategories()
-            }).catch((e) => {
-              if(e.response && e.response.data) {
-                log.error('Erro ao remover produto ' + JSON.stringify(e.response.data))
-                this.$store.dispatch('openAlert', {
-                  message: e.response.data ? e.response.data.message : `Erro ao remover produto`,
-                  type: 'error'
-                })
-              }
-            })
-          }
-        })
-      },
-    getProductList() {
-      bardemu.get('/products', {
+    getDistrictList() {
+      console.log('get districts')
+      bardemu.get('/districts', {
         headers: {
-          "without-images": true
+          "x-access-token": this.$store.state.token
         }
       }).then((res) => {
-        this.products = res.data
+        this.districts = res.data
         console.log(res)
       }).catch((e) => {
         if(e.response && e.response.data) {
-          log.error('Erro ao consultar produtos ' + JSON.stringify(e.response.data))
+          log.error('Erro ao consultar bairros ' + JSON.stringify(e.response.data))
           this.$store.dispatch('openAlert', {
-            message: e.response.data ? e.response.data.message : `Erro ao consultar produtos`,
+            message: e.response.data ? e.response.data.message : `Erro ao consultar bairros`,
             type: 'error'
           })
         }
         console.log(e.response)
       })
-    }
+    },
+    deleteDistrict(id, name) {
+      const dialogOpts = {
+        type: "question",
+        buttons: [
+          'Sim', 'Não'
+        ],
+        title: 'Remover bairro',
+        detail: `Tem certeza que deseja remover o bairro "${name}"?`
+      }
+
+      remote.dialog.showMessageBox(dialogOpts).then((res) => {
+        if (res && res.response == 0) {
+          bardemu.delete('/district', {
+            data: {
+              _id: id
+            },
+            headers: {
+              "x-access-token": this.$store.state.token
+            }
+          }).then((res) => {
+            console.log(res)
+            this.$store.dispatch('openAlert', {
+              message: 'Bairro removido',
+              type: 'success'
+            })
+            this.getDistrictList()
+          }).catch((e) => {
+            if(e.response && e.response.data) {
+              log.error('Erro ao remover bairro ' + JSON.stringify(e.response.data))
+              this.$store.dispatch('openAlert', {
+                message: e.response.data ? e.response.data.message : `Erro ao remover bairro`,
+                type: 'error'
+              })
+            }
+          })
+        }
+      })
+    },
   }
 }
 </script>

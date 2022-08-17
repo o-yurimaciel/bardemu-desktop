@@ -10,3 +10,27 @@
 .rotatingAnimation {
   animation: rotatingAnimation 0.5s linear infinite;
 }
+
+.wrapper-configs {
+  background: url('http://i.mlcdn.com.br/portaldalu/fotosconteudo/43225.jpg')!important;
+  background-size: cover!important;
+  background-repeat: no-repeat;
+  background-size: 25% 100%;
+  height: 300px;
+}
+
+.wrapper-orders {
+  background: url('https://p4.wallpaperbetter.com/wallpaper/470/622/407/burger-4k-background-image-hd-wallpaper-preview.jpg')!important;
+  background-size: cover!important;
+  background-repeat: no-repeat;
+  background-size: 25% 100%;
+  height: 300px;
+}
+
+.wrapper-adm {
+  background: url('https://img.freepik.com/fotos-gratis/vista-lateral-de-batatas-fritas-com-tempero_141793-4899.jpg?w=2000')!important;
+  background-size: cover!important;
+  background-repeat: no-repeat;
+  background-size: 25% 100%;
+  height: 300px;
+}

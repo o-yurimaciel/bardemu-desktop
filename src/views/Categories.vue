@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-0 ma-0 wrapper">
+  <v-container fluid class="pa-0 ma-0 wrapper-configs">
     <v-col offset="1" cols="10" class="pa-0 d-flex justify-center flex-column mx-auto pt-10">
       <v-row no-gutters>
         <v-col cols="12" class="pa-0 d-flex flex-column">
@@ -72,7 +72,8 @@ import log from '../logConfig'
     data: () => ({
       categories:[],
       items: [
-        { text: 'Home', to: '/home' }
+        { text: 'Home', to: '/home' },
+        { text: 'Configurações', to: '/configs' },
       ]
     }),
     mounted() {

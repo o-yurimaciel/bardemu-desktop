@@ -15,7 +15,7 @@
         </template>
       </v-breadcrumbs>
       <span class="page-title">
-        {{edit ? `Editar Categoria "${oldName}"` : 'Criar Categoria' }}
+        {{edit ? `Editar Bairro "${oldName}"` : 'Criar Bairro' }}
       </span>
     </v-col>
     <v-col class="pa-0 pt-15 d-flex justify-center">
@@ -34,20 +34,20 @@
                 label="Nome"
                 autofocus
                 color="var(--primary-color)"
-                v-model="category.name"
+                v-model="district.name"
                 id="name"
                 >
                 </v-text-field>
               </v-col>
               <v-col class="pa-0">
-                <v-text-field
-                label="Ordem"
+                <v-currency-field
+                v-model="district.price"
                 outlined
                 color="var(--primary-color)"
-                v-model="category.order"
-                id="order"
+                label="Preço"
+                id="description"
                 >
-                </v-text-field>
+                </v-currency-field>
               </v-col>
             </v-form>
           </v-col>
@@ -58,7 +58,7 @@
       <v-btn
       color="green"
       :outlined="false"
-      @click="edit? updateCategory() : createCategory()"
+      @click="edit? updateDistrict() : createDistrict()"
       >
         <span style="color: #fff">{{edit ? 'Atualizar' : 'Criar'}}</span>
       </v-btn>
@@ -75,15 +75,15 @@ export default {
       id: "",
       edit: false,
       isFormValid: false,
-      category: {
+      district: {
         name: "",
-        order: 1
+        price: 0
       },
       oldName: "",
       items: [
         { text: 'Home', to: '/home' },
         { text: 'Configurações', to: '/configs' },
-        { text: 'Categorias', to: '/categories' }
+        { text: 'Bairros', to: '/delivery-config' },
       ]
     }
   },
@@ -91,26 +91,25 @@ export default {
     if(this.$router.history.current.params.id) {
       this.id = this.$router.history.current.params.id
       this.edit = true
-      this.getCategory()
+      this.getDistrict()
     }
   },
   methods: {
-    createCategory() {
-      console.log(this.category)
-      bardemu.post('/category', this.category, {
+    createDistrict() {
+      bardemu.post('/district', this.district, {
         headers: {
           "x-access-token": this.$store.state.token
         }
       }).then((res) => {
         console.log(res)
-        this.$router.push('/categories')
+        this.$router.push('/delivery-config')
         this.$store.dispatch('openAlert', {
-          message: 'Categoria criada!',
+          message: 'Bairro criado!',
           type: 'success'
         })
       }).catch((e =>  {
         if(e.response && e.response.data) {
-          log.error('Erro ao criar categoria' + JSON.stringify(e.response.data))
+          log.error('Erro ao criar bairro' + JSON.stringify(e.response.data))
           this.$store.dispatch('openAlert', {
             message: e.response.data ? e.response.data.message : `Erro ao criar categoria`,
             type: 'error'
@@ -118,8 +117,8 @@ export default {
         }
       }))
     },
-    updateCategory() {
-      bardemu.put('/category', this.category, {
+    updateDistrict() {
+      bardemu.put('/district', this.district, {
         params: {
           _id: this.id
         },
@@ -128,35 +127,38 @@ export default {
         }
       }).then((res) => {
         console.log(res)
-        this.$router.push('/categories')
+        this.$router.push('/delivery-config')
         this.$store.dispatch('openAlert', {
-          message: 'Categoria atualizada!',
+          message: 'Bairro atualizado!',
           type: 'success'
         })
       }).catch((e) => {
         if(e.response && e.response.data) {
-          log.error('Erro ao atualizar categoria ' + JSON.stringify(e.response.data))
+          log.error('Erro ao atualizar bairro ' + JSON.stringify(e.response.data))
           this.$store.dispatch('openAlert', {
-            message: e.response.data ? e.response.data.message : `Erro ao atualizar categoria`,
+            message: e.response.data ? e.response.data.message : `Erro ao atualizar bairro`,
             type: 'error'
           })
         }
       })
     },
-    getCategory() {
-      bardemu.get('/category', {
+    getDistrict() {
+      bardemu.get('/district', {
         params: {
           _id: this.id
+        },
+        headers: {
+          "x-access-token": this.$store.state.token
         }
       }).then((res) => {
         this.oldName = res.data.name
-        this.category = res.data
+        this.district = res.data
         console.log(res)
       }).catch((e) => {
         if(e.response && e.response.data) {
-          log.error('Erro ao consultar categorias ' + JSON.stringify(e.response.data))
+          log.error('Erro ao consultar bairros ' + JSON.stringify(e.response.data))
           this.$store.dispatch('openAlert', {
-            message: e.response.data ? e.response.data.message : `Erro ao consultar categorias`,
+            message: e.response.data ? e.response.data.message : `Erro ao consultar bairros`,
             type: 'error'
           })
         }

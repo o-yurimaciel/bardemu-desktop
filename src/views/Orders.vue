@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="wrapper pa-0 ma-0">
+  <v-container fluid class="wrapper-orders pa-0 ma-0">
     <v-col cols="10" offset="1" class="pa-0 pt-10 pb-15">
       <v-col cols="12" class="pa-0 d-flex flex-column" style="position: relative">
         <v-breadcrumbs

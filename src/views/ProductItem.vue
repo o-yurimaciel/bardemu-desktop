@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pa-0 ma-0 wrapper">
+  <v-container fluid class="pa-0 ma-0 wrapper-configs">
     <v-col offset="1" cols="10" class="pa-0 pt-10 d-flex flex-column">
       <v-breadcrumbs
         class="pa-0"
@@ -157,6 +157,7 @@ export default {
       oldName: "",
       items: [
         { text: 'Home', to: '/home' },
+        { text: 'Configurações', to: '/configs' },
         { text: 'Produtos', to: '/products' },
       ]
     }
