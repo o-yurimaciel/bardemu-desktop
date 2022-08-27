@@ -6,12 +6,16 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    token: ""
+    token: "",
+    userId: ""
   },
   mutations: {
     setToken(state, token) {
       state.token = token
     },
+    setUserId(state, userId) {
+      state.userId = userId
+    }
   },
   actions: {
     openAlert(context, alert) {

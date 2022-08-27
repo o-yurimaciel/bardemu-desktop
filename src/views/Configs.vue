@@ -1,6 +1,6 @@
 <template>
   <v-app class="wrapper-configs">
-    <v-col offset="1" cols="10" class="pa-0 pt-10">
+    <v-col offset="1" cols="10" class="pa-0 pt-10 pb-10">
       <v-row no-gutters class="d-flex justify-space-between">
         <v-col cols="12" class="pa-0 d-flex flex-column">
           <v-breadcrumbs
@@ -50,7 +50,7 @@ export default {
         { icon: 'mdi-food', title: "Categorias", description: "Crie, edite ou remova uma categoria.", to: '/categories'},
         { icon: 'mdi-food', title: "Produtos", description: "Crie, edite ou remova um produto.", to: '/products' },
         { icon: 'mdi-bike-fast', title: "Entregas", description: "Configure as entregas.", to: '/delivery-config' },
-        { icon: 'mdi-ticket-percent', title: "Cupons", description: "Crie, edite ou remova um cupom.", to: '/configs' },
+        { icon: 'mdi-ticket-percent', title: "Cupons", description: "Crie, edite ou remova um cupom.", to: '/coupons' },
         { icon: 'mdi-clock', title: "Horário de funcionamento", description: "Configure o horário de funcionamento.", to: '/configs' },
       ]
     }
@@ -72,10 +72,10 @@ h1 {
 
 .page-title {
   color: #fff;
-  font-family: 'Kaushan Script', sans-serif;
+  font-family: 'Poppins', sans-serif;
   letter-spacing: 4px;
   font-weight: bold;
-  font-size: 3em;
+  font-size: 2.2em;
   text-shadow: 1px 1px 3px black!important;
 }
 </style>

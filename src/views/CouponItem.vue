@@ -15,7 +15,7 @@
         </template>
       </v-breadcrumbs>
       <span class="page-title">
-        {{edit ? `Editar Bairro "${oldName}"` : 'Criar Bairro' }}
+        {{edit ? `Editar Cupom "${oldName}"` : 'Criar Cupom' }}
       </span>
     </v-col>
     <v-col class="pa-0 pt-15 d-flex justify-center">
@@ -25,29 +25,54 @@
       class="elevation-3 pa-10"
       color="#fff"
       >
-        <v-row no-gutters class="d-flex justify-center">
+        <v-switch
+          v-model="coupon.active"
+          style="position: absolute;top:0px;left:28%;z-index: 100"
+          :label="coupon.active ? 'Ativo' : 'Inativo'"
+        ></v-switch>
+        <v-row no-gutters class="d-flex justify-center pt-6">
           <v-col cols="6" class="pa-0">
             <v-form v-model="isFormValid" @submit.prevent>
               <v-col class="pa-0">
                 <v-text-field
                 outlined
-                label="Nome"
-                autofocus
+                label="Código"
                 color="var(--primary-color)"
-                v-model="district.name"
+                v-model="coupon.name"
+                :error="!coupon.name"
                 id="name"
                 >
                 </v-text-field>
               </v-col>
               <v-col class="pa-0">
-                <v-currency-field
-                v-model="district.price"
+                <v-select
+                outlined
+                :items="fieldOptions"
+                color="var(--primary-color)"
+                :value="coupon.field"
+                :error="!coupon.field"
+                v-model="coupon.field"
+                label="Desconto (Tipo)"
+                id="field"
+                >
+                  <template slot="selection" slot-scope="data">
+                    <span class="select-selection">{{data.item.name}}</span>
+                  </template>
+                  <template slot="item" slot-scope="data">
+                    <span class="select-item">{{data.item.name}}</span>
+                  </template>
+                </v-select>
+              </v-col>
+              <v-col class="pa-0">
+                <v-text-field
+                label="Desconto (%)"
                 outlined
                 color="var(--primary-color)"
-                label="Preço"
-                id="description"
+                v-model="coupon.percent"
+                :error="!coupon.percent"
+                id="order"
                 >
-                </v-currency-field>
+                </v-text-field>
               </v-col>
             </v-form>
           </v-col>
@@ -58,7 +83,7 @@
       <v-btn
       color="green"
       :outlined="false"
-      @click="edit? updateDistrict() : createDistrict()"
+      @click="edit? updateCoupon() : createCoupon()"
       >
         <span style="color: #fff">{{edit ? 'Atualizar' : 'Criar'}}</span>
       </v-btn>
@@ -75,15 +100,22 @@ export default {
       id: "",
       edit: false,
       isFormValid: false,
-      district: {
+      coupon: {
         name: "",
-        price: 0
+        percent: null,
+        field: null,
+        active: false
       },
       oldName: "",
       items: [
         { text: 'Home', to: '/home' },
         { text: 'Configurações', to: '/configs' },
-        { text: 'Bairros', to: '/delivery-config' },
+        { text: 'Cupons', to: '/coupons' }
+      ],
+      fieldOptions: [
+        { name: "Pedido", value: "orderValue" },
+        { name: "Entrega", value: "deliveryPrice" },
+        { name: "Total a pagar", value: "totalValue" },
       ]
     }
   },
@@ -91,35 +123,35 @@ export default {
     if(this.$router.history.current.params.id) {
       this.id = this.$router.history.current.params.id
       this.edit = true
-      this.getDistrict()
+      this.getCoupon()
     }
   },
   methods: {
-    createDistrict() {
-      bardemu.post('/district', this.district, {
+    createCoupon() {
+      bardemu.post('/coupon', this.coupon, {
         headers: {
           "x-user-id": this.$store.state.userId,
           "x-access-token": this.$store.state.token
         }
       }).then((res) => {
         console.log(res)
-        this.$router.push('/delivery-config')
+        this.$router.push('/coupons')
         this.$store.dispatch('openAlert', {
-          message: 'Bairro criado!',
+          message: 'Cupom criado!',
           type: 'success'
         })
       }).catch((e =>  {
         if(e.response && e.response.data) {
-          log.error('Erro ao criar bairro' + JSON.stringify(e.response.data))
+          log.error('Erro ao criar cupom' + JSON.stringify(e.response.data))
           this.$store.dispatch('openAlert', {
-            message: e.response.data ? e.response.data.message : `Erro ao criar categoria`,
+            message: e.response.data ? e.response.data.message : `Erro ao criar cupom`,
             type: 'error'
           })
         }
       }))
     },
-    updateDistrict() {
-      bardemu.put('/district', this.district, {
+    updateCoupon() {
+      bardemu.put('/coupon', this.coupon, {
         params: {
           _id: this.id
         },
@@ -129,38 +161,39 @@ export default {
         }
       }).then((res) => {
         console.log(res)
-        this.$router.push('/delivery-config')
+        this.$router.push('/coupons')
         this.$store.dispatch('openAlert', {
-          message: 'Bairro atualizado!',
+          message: 'Cupom atualizado!',
           type: 'success'
         })
       }).catch((e) => {
         if(e.response && e.response.data) {
-          log.error('Erro ao atualizar bairro ' + JSON.stringify(e.response.data))
+          log.error('Erro ao atualizar cupom ' + JSON.stringify(e.response.data))
           this.$store.dispatch('openAlert', {
-            message: e.response.data ? e.response.data.message : `Erro ao atualizar bairro`,
+            message: e.response.data ? e.response.data.message : `Erro ao atualizar cupom`,
             type: 'error'
           })
         }
       })
     },
-    getDistrict() {
-      bardemu.get('/district', {
+    getCoupon() {
+      bardemu.get('/coupon', {
         params: {
           _id: this.id
         },
         headers: {
+          "x-user-id": this.$store.state.userId,
           "x-access-token": this.$store.state.token
         }
       }).then((res) => {
         this.oldName = res.data.name
-        this.district = res.data
+        this.coupon = res.data
         console.log(res)
       }).catch((e) => {
         if(e.response && e.response.data) {
-          log.error('Erro ao consultar bairros ' + JSON.stringify(e.response.data))
+          log.error('Erro ao consultar cupom ' + JSON.stringify(e.response.data))
           this.$store.dispatch('openAlert', {
-            message: e.response.data ? e.response.data.message : `Erro ao consultar bairros`,
+            message: e.response.data ? e.response.data.message : `Erro ao consultar cupom`,
             type: 'error'
           })
         }

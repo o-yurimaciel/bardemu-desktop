@@ -16,34 +16,30 @@
               </v-breadcrumbs-item>
             </template>
           </v-breadcrumbs>
-          <span class="page-title">Produtos</span>
+          <span class="page-title">Cupons</span>
         </v-col>
         <v-col class="pa-0 d-flex justify-end pt-lg-0">
           <v-btn 
           color="green"
           class="text-capitalize"
           >
-            <span @click="addProduct" style="color: #fff">Adicionar Produto</span>
+            <span @click="addProduct" style="color: #fff">Adicionar Cupom</span>
           </v-btn>
         </v-col>
       </v-row>
       <v-col cols="12" class="pa-0 mx-auto content pt-10 mb-15">
         <table style="width: 100%" class="elevation-1">
           <tr style="backgroundColor: #fff">
-            <th>Categoria</th>
-            <th>Nome</th>
-            <th>Descrição</th>
-            <th>Preço</th>
+            <th>Código</th>
+            <th>Desconto</th>
             <th>Ativo</th>
             <th>Ações</th>
           </tr>
-          <tbody v-for="product in products" :key="product._id">
+          <tbody v-for="coupon in coupons" :key="coupon._id">
             <tr>
-              <td>{{product.category}}</td>
-              <td>{{product.name}}</td>
-              <td>{{getDescription(product.description)}}</td>
-              <td>{{product.price | currency}}</td>
-              <td v-if="product.active">
+              <td>{{coupon.name}}</td>
+              <td>{{getCouponFieldText(coupon.field)}} ({{coupon.percent}}%)</td>
+              <td v-if="coupon.active">
                 <v-icon color="green">mdi-check-circle</v-icon>
               </td>
               <td v-else>
@@ -54,14 +50,14 @@
                 class="mr-2"
                 color="green"
                 small
-                @click="editProduct(product._id)"
+                @click="editCoupon(coupon._id)"
                 >
                   <v-icon color="#FFF">mdi-pencil</v-icon>
                 </v-btn>
                 <v-btn
                 color="red"
                 small
-                @click="deleteProduct(product._id, product.name)"
+                @click="deleteCoupon(coupon._id, coupon.name)"
                 >
                   <v-icon color="#fff">mdi-delete</v-icon>
                 </v-btn>
@@ -82,7 +78,7 @@ import { remote } from 'electron'
 export default {
   data() {
     return {
-      products: [],
+      coupons: [],
       items: [
         { text: 'Home', to: '/home' },
         { text: 'Configurações', to: '/configs' },
@@ -90,37 +86,42 @@ export default {
     }
   },
   mounted() {
-    this.getProductList()
+    this.getCouponList()
   },
   methods: {
-    getDescription(description) {
-      if(description && description.length > 20) {
-        return description.substring(0, 20).concat('...')
-      } else {
-        return description
+    getCouponFieldText(field) {
+      switch(field) {
+        case "totalValue":
+          return "Total a pagar"
+        case "orderValue":
+          return "Pedido"
+        case "deliveryPrice":
+          return "Entrega"
+        default:
+          return ""
       }
     },
-    editProduct(id) {
-      this.$router.push(`/product/${id}`)
+    editCoupon(id) {
+      this.$router.push(`/coupon/${id}`)
     },
     addProduct() {
       this.$router.push({
-        name: 'product-item'
+        name: 'coupon-item'
       })
     },
-    deleteProduct(id, name) {
+    deleteCoupon(id, name) {
         const dialogOpts = {
           type: "question",
           buttons: [
             'Sim', 'Não'
           ],
-          title: 'Remover produto',
-          detail: `Tem certeza que deseja remover o produto "${name}"?`
+          title: 'Remover cupom',
+          detail: `Tem certeza que deseja remover o cupom "${name}"?`
         }
 
         remote.dialog.showMessageBox(dialogOpts).then((res) => {
           if (res && res.response == 0) {
-            bardemu.delete('/product', {
+            bardemu.delete('/coupon', {
               data: {
                 _id: id
               },
@@ -131,15 +132,15 @@ export default {
             }).then((res) => {
               console.log(res)
               this.$store.dispatch('openAlert', {
-                message: 'Produto removido',
+                message: 'Cupom removido',
                 type: 'success'
               })
-              this.getCategories()
+              this.getCouponList()
             }).catch((e) => {
               if(e.response && e.response.data) {
-                log.error('Erro ao remover produto ' + JSON.stringify(e.response.data))
+                log.error('Erro ao remover cupom ' + JSON.stringify(e.response.data))
                 this.$store.dispatch('openAlert', {
-                  message: e.response.data ? e.response.data.message : `Erro ao remover produto`,
+                  message: e.response.data ? e.response.data.message : `Erro ao remover cupom`,
                   type: 'error'
                 })
               }
@@ -147,19 +148,20 @@ export default {
           }
         })
       },
-    getProductList() {
-      bardemu.get('/products', {
+    getCouponList() {
+      bardemu.get('/coupons', {
         headers: {
-          "without-images": true
+          "x-access-token": this.$store.state.token,
+          "x-user-id": this.$store.state.userId
         }
       }).then((res) => {
-        this.products = res.data.sort((a, b) => a.name.localeCompare(b.name))
+        this.coupons = res.data.sort((a, b) => a.name.localeCompare(b.name))
         console.log(res)
       }).catch((e) => {
         if(e.response && e.response.data) {
-          log.error('Erro ao consultar produtos ' + JSON.stringify(e.response.data))
+          log.error('Erro ao consultar cupons ' + JSON.stringify(e.response.data))
           this.$store.dispatch('openAlert', {
-            message: e.response.data ? e.response.data.message : `Erro ao consultar produtos`,
+            message: e.response.data ? e.response.data.message : `Erro ao consultar cupons`,
             type: 'error'
           })
         }

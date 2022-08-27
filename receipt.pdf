@@ -10,7 +10,7 @@
 endobj
 4 0 obj
 <<
-/Length 817
+/Length 1132
 >>
 stream
 0.5670000000000001 w
@@ -22,25 +22,30 @@ BT
 28.3464566929133888 813.5435433070865656 Td
 () Tj
 T* (        BarDeMu Lanches) Tj
-T* () Tj
-T* (        Pedido "62eaba7f0636f7331b6a075a") Tj
-T* (        Código de entrega: 8185) Tj
-T* (        03/08/2022 - 15:12) Tj
-T* () Tj
-T* (        Nome: Brenda Balbueno) Tj
-T* (        Telefone: +55 \(51\) 95058185) Tj
-T* (        Endereço: Rua Amapa, 158 ) Tj
+T* (        ) Tj
+T* (        Pedido "62fc1dfe8919bff7e70c8b4a") Tj
+T* (        27/08/2022 - 19:45) Tj
+T* (        ) Tj
+T* (        Código de entrega: 4703) Tj
+T* (        ) Tj
+T* (        Nome: Bruno Balbueno) Tj
+T* (        Telefone: +55 \(51\) 98168-4703) Tj
+T* (        Endereço: Rua Atílio Supertti, 2164 Comp: Bl 5 AP 201) Tj
 T* (        Tipo de Pagamento: PIX ) Tj
 T* (        __________________________________________________) Tj
-T* () Tj
 T* (        ) Tj
-T* (        2x Xis calabresa R$20,00) Tj
-T* (        Obs: sem ovo) Tj
+T* (        ) Tj
+T* (        3x X - Carne c/ Cheddar R$25,00) Tj
+T* (        Obs: 1 carne com cheddar sem mostarda) Tj
+T* (1 carne com cheddar sem mostarda, sem Ketchup, sem Maionese, sem tomate e sem alface) Tj
+T* (1 carne com cheddar completo,) Tj
+T* (        1x Refrigerante 2 Litros R$12,00) Tj
 T* (        ) Tj
 T* (        __________________________________________________) Tj
 T* () Tj
 T* (        Entrega: R$0,00) Tj
-T* (        Total a pagar: R$40,00) Tj
+T* (        Desconto: R$0,00) Tj
+T* (        Total a pagar: R$87,00) Tj
 T* (        ) Tj
 T* (      ) Tj
 ET
@@ -216,7 +221,7 @@ endobj
 19 0 obj
 <<
 /Producer (jsPDF 2.5.1)
-/CreationDate (D:20220803153911-03'00')
+/CreationDate (D:20220827120007-03'00')
 >>
 endobj
 20 0 obj
@@ -230,33 +235,33 @@ endobj
 xref
 0 21
 0000000000 65535 f 
-0000001020 00000 n 
-0000002837 00000 n 
+0000001336 00000 n 
+0000003153 00000 n 
 0000000015 00000 n 
 0000000152 00000 n 
-0000001077 00000 n 
-0000001202 00000 n 
-0000001332 00000 n 
-0000001465 00000 n 
-0000001602 00000 n 
-0000001725 00000 n 
-0000001854 00000 n 
-0000001986 00000 n 
-0000002122 00000 n 
-0000002250 00000 n 
-0000002377 00000 n 
-0000002506 00000 n 
-0000002639 00000 n 
-0000002741 00000 n 
-0000003085 00000 n 
-0000003171 00000 n 
+0000001393 00000 n 
+0000001518 00000 n 
+0000001648 00000 n 
+0000001781 00000 n 
+0000001918 00000 n 
+0000002041 00000 n 
+0000002170 00000 n 
+0000002302 00000 n 
+0000002438 00000 n 
+0000002566 00000 n 
+0000002693 00000 n 
+0000002822 00000 n 
+0000002955 00000 n 
+0000003057 00000 n 
+0000003401 00000 n 
+0000003487 00000 n 
 trailer
 <<
 /Size 21
 /Root 20 0 R
 /Info 19 0 R
-/ID [ <13371E39DCA11ED59F66C0B7F98292AD> <13371E39DCA11ED59F66C0B7F98292AD> ]
+/ID [ <3624C2413D7762195A777E365D9DC97F> <3624C2413D7762195A777E365D9DC97F> ]
 >>
 startxref
-3275
+3591
 %%EOF

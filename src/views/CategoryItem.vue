@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="pa-0 ma-0 wrapper-configs">
-    <v-col offset="1" class="pa-0 pt-10 d-flex flex-column">
+    <v-col offset="1" class="pa-0 pt-10 pb-10 d-flex flex-column">
       <v-breadcrumbs
         class="pa-0"
         :items="items"
@@ -25,7 +25,12 @@
       class="elevation-3 pa-10"
       color="#fff"
       >
-        <v-row no-gutters class="d-flex justify-center">
+        <v-switch
+          v-model="category.active"
+          style="position: absolute;top:0px;left:28%;z-index: 100"
+          :label="category.active ? 'Ativo' : 'Inativo'"
+        ></v-switch>
+        <v-row no-gutters class="d-flex justify-center pt-6">
           <v-col cols="6" class="pa-0">
             <v-form v-model="isFormValid" @submit.prevent>
               <v-col class="pa-0">
@@ -77,7 +82,8 @@ export default {
       isFormValid: false,
       category: {
         name: "",
-        order: 1
+        order: 1,
+        active: false
       },
       oldName: "",
       items: [
@@ -96,9 +102,9 @@ export default {
   },
   methods: {
     createCategory() {
-      console.log(this.category)
       bardemu.post('/category', this.category, {
         headers: {
+          "x-user-id": this.$store.state.userId,
           "x-access-token": this.$store.state.token
         }
       }).then((res) => {
@@ -124,6 +130,7 @@ export default {
           _id: this.id
         },
         headers: {
+          "x-user-id": this.$store.state.userId,
           "x-access-token": this.$store.state.token
         }
       }).then((res) => {
@@ -169,10 +176,10 @@ export default {
 <style scoped>
 .page-title {
   color: #fff;
-  font-family: 'Kaushan Script', sans-serif;
+  font-family: 'Poppins', sans-serif;
   letter-spacing: 4px;
   font-weight: bold;
-  font-size: 3em;
+  font-size: 2.2em;
   text-shadow: 1px 1px 3px black!important;
 }
 

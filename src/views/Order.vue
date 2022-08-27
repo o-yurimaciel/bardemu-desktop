@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="pa-0 ma-0 wrapper-orders">
-    <v-col class="pa-0 d-flex flex-column flex-grow-0 pt-10">
+    <v-col class="pa-0 d-flex flex-column flex-grow-0 pt-10 pb-10">
       <v-col offset="1" class="pa-0">
         <v-breadcrumbs
           class="pa-0"
@@ -46,10 +46,10 @@
               Tempo estimado para entrega: {{order.estimatedTime}}min
             </span>
           </v-col>
-          <v-col cols="10" class="pa-0 d-flex justify-center pt-3 align-center mx-auto" v-if="order.orderStatus !== 'DELIVERED' && order.orderStatus !== 'CANCELLED'">
+          <v-col cols="10" class="pa-0 d-flex justify-center pt-3 align-center mx-auto">
             <v-icon color="var(--primary-color)">mdi-map-marker</v-icon>
             <span class="ml-2">
-              Entregar em: {{ formatDeliveryAt(order) }}
+              {{ formatDeliveryAt(order) }}
             </span>
           </v-col>
           <v-col class="pa-0 d-flex justify-center">
@@ -276,7 +276,8 @@ export default {
       this.handlingh = true
       bardemu.get('/order', {
         params: {
-          _id: id
+          _id: id,
+          userId: this.$store.state.userId
         },
         headers: {
           "x-access-token": this.$store.state.token
@@ -288,10 +289,13 @@ export default {
           { description: 'Nome', value: this.order.clientName },
           { description: 'Telefone', value: this.order.clientPhone },
           { description: 'Tipo de Pagamento', value: this.order.paymentType },
-          { description: 'Bandeira', value: this.order.flag }
+          { description: 'Bandeira', value: this.order.flag },
+          { description: 'Cupom de desconto', value: this.order.coupon }
         ]
         this.details = [
+          { description: 'Pedido', value: this.order.orderValue },
           { description: 'Entrega', value: this.order.deliveryPrice },
+          { description: 'Desconto', value: this.order.discountValue },
           { description: 'Total a pagar', value: this.order.totalValue },
           { description: 'Troco', value: this.order.cashChange },
         ]
@@ -381,6 +385,7 @@ export default {
           _id: this.order._id
         },
         headers: {
+          "x-user-id": this.$store.state.userId,
           "x-access-token": this.$store.state.token
         }
       }).then((res) => {

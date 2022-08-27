@@ -11,7 +11,7 @@
         tile
         @click="goTo(menu.route)"
         >
-          <v-icon size="150" color="#fff">{{menu.icon}}</v-icon>
+          <img :src="require('../assets/' + menu.icon)" width="150" alt="">
           <span class="menu-title">{{menu.title}}</span>
         </v-card>
       </v-col>
@@ -25,9 +25,9 @@ export default {
   data() {
     return {
       menus: [
-        { title: "Pedidos", cols: "12", color: "var(--primary-color)", icon: "mdi-basket", route: '/orders', src: 'https://p4.wallpaperbetter.com/wallpaper/470/622/407/burger-4k-background-image-hd-wallpaper-preview.jpg' },
-        { title: "Administrativo", cols: "6", color: "green", icon: "mdi-food", src: 'https://img.freepik.com/fotos-gratis/vista-lateral-de-batatas-fritas-com-tempero_141793-4899.jpg?w=2000', route: '/adm' },
-        { title: "Configurações", cols: "6", color: "yellow", icon: "mdi-cog", src: 'http://i.mlcdn.com.br/portaldalu/fotosconteudo/43225.jpg', route: '/configs' },
+        { title: "Pedidos", cols: "12", color: "var(--primary-color)", icon: "shopping-basket.png", route: '/orders', src: 'https://p4.wallpaperbetter.com/wallpaper/470/622/407/burger-4k-background-image-hd-wallpaper-preview.jpg' },
+        { title: "Administrativo", cols: "6", color: "green", icon: "project-management.png", src: 'https://img.freepik.com/fotos-gratis/vista-lateral-de-batatas-fritas-com-tempero_141793-4899.jpg?w=2000', route: '/adm' },
+        { title: "Configurações", cols: "6", color: "yellow", icon: "settings.png", src: 'http://i.mlcdn.com.br/portaldalu/fotosconteudo/43225.jpg', route: '/configs' },
       ]
     }
   },
@@ -50,7 +50,7 @@ export default {
 
 .menu-title {
   color: #fff;
-  font-family: 'Kaushan Script', sans-serif;
+  font-family: 'Poppins', sans-serif;
   letter-spacing: 4px;
   font-weight: bold;
   font-size: 2.5em;

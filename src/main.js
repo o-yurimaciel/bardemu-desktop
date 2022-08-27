@@ -10,7 +10,6 @@ import { ipcRenderer } from 'electron'
 import { EventBus } from './EventBus'
 import store from './store'
 import { bardemu } from './services'
-
 Vue.config.productionTip = false
 
 new Vue({
@@ -140,7 +139,7 @@ bardemu.interceptors.response.use(
   res => res,
   err => {
     const statusCode = err.response.status
-    if (statusCode === 401 || statusCode === 403) {
+    if (statusCode === 401) {
       store.commit('setToken', null)
       store.dispatch('openAlert', {
         message: 'A autenticação falhou. Por favor, faça o login.',

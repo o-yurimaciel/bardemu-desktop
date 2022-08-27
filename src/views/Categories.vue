@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="pa-0 ma-0 wrapper-configs">
-    <v-col offset="1" cols="10" class="pa-0 d-flex justify-center flex-column mx-auto pt-10">
+    <v-col offset="1" cols="10" class="pa-0 d-flex justify-center flex-column mx-auto pt-10 pb-10">
       <v-row no-gutters>
         <v-col cols="12" class="pa-0 d-flex flex-column">
           <v-breadcrumbs
@@ -32,12 +32,19 @@
           <tr style="backgroundColor: #fff">
             <th>Nome</th>
             <th>Ordem</th>
+            <th>Ativo</th>
             <th>Ações</th>
           </tr>
           <tbody v-for="category in categories" :key="category._id">
             <tr>
               <td>{{category.name}}</td>
               <td>{{category.order}}</td>
+              <td v-if="category.active">
+                <v-icon color="green">mdi-check-circle</v-icon>
+              </td>
+              <td v-else>
+                <v-icon color="red">mdi-close-circle</v-icon>
+              </td>
               <td>
                 <v-btn 
                 class="mr-2"
@@ -84,7 +91,6 @@ import log from '../logConfig'
         bardemu.get('/categories')
         .then((res) => {
           this.categories = res.data.sort((a,b) => a.order - b.order)
-          console.log(res)
         }).catch((e) => {
           if(e.response && e.response.data) {
             log.error('Erro ao consultar categorias ' + JSON.stringify(e.response.data))
@@ -117,6 +123,7 @@ import log from '../logConfig'
                 _id: id
               },
               headers: {
+                "x-user-id": this.$store.state.userId,
                 "x-access-token": this.$store.state.token
               }
             }).then((res) => {
@@ -193,10 +200,10 @@ h1 {
 
 .page-title {
   color: #fff;
-  font-family: 'Kaushan Script', sans-serif;
+  font-family: 'Poppins', sans-serif;
   letter-spacing: 4px;
   font-weight: bold;
-  font-size: 3em;
+  font-size: 2.2em;
   text-shadow: 1px 1px 3px black!important;
 }
 </style>

@@ -1,8 +1,18 @@
+const webpack = require('webpack')
+require("dotenv").config()
+
 module.exports = {
   transpileDependencies: [
     'vuetify'
   ],
   configureWebpack: {
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env': {
+          'GH_TOKEN': JSON.stringify(process.env.GH_TOKEN)
+        }
+      })
+    ],
     output: {
       pathinfo: false
     },

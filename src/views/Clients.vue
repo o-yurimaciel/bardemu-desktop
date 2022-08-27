@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="pa-0 ma-0 wrapper-adm">
-    <v-col offset="1" cols="10" class="pa-0 d-flex justify-center flex-column mx-auto pt-10">
+    <v-col offset="1" cols="10" class="pa-0 d-flex justify-center flex-column mx-auto pt-10 pb-10">
       <v-row no-gutters>
         <v-col cols="12" class="pa-0 d-flex flex-column">
           <v-breadcrumbs
@@ -68,11 +68,11 @@ import log from '../logConfig'
         bardemu.get('/users', {
           headers: {
             "x-access-token": this.$store.state.token,
-            "role": "master"
+            "x-user-id": this.$store.state.userId,
           }
         })
         .then((res) => {
-          this.clients = res.data
+          this.clients = res.data.sort((a, b) => a.fullName.localeCompare(b.fullName))
         }).catch((e) => {
           if(e.response && e.response.data) {
             log.error('Erro ao consultar categorias ' + JSON.stringify(e.response.data))
@@ -135,10 +135,10 @@ h1 {
 
 .page-title {
   color: #fff;
-  font-family: 'Kaushan Script', sans-serif;
+  font-family: 'Poppins', sans-serif;
   letter-spacing: 4px;
   font-weight: bold;
-  font-size: 3em;
+  font-size: 2.2em;
   text-shadow: 1px 1px 3px black!important;
 }
 </style>

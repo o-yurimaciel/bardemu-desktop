@@ -16,6 +16,8 @@ import Clients from '../views/Clients.vue'
 import Feedbacks from '../views/Feedbacks.vue'
 import DeliveryConfig from '../views/DeliveryConfig.vue'
 import DistrictItem from '../views/DistrictItem.vue'
+import Coupons from '../views/Coupons.vue'
+import CouponItem from '../views/CouponItem.vue'
 
 Vue.use(VueRouter)
 
@@ -143,6 +145,22 @@ const routes = [
     },
     name: 'district-item',
     component: DistrictItem
+  },
+  {
+    path: '/coupons',
+    beforeEnter: (to, from, next) => {
+      auth(to, from, next)
+    },
+    name: 'coupons',
+    component: Coupons
+  },
+  {
+    path: '/coupon/:id?',
+    beforeEnter: (to, from, next) => {
+      auth(to, from, next)
+    },
+    name: 'coupon-item',
+    component: CouponItem
   },
 ]
 

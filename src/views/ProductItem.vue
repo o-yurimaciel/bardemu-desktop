@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="pa-0 ma-0 wrapper-configs">
-    <v-col offset="1" cols="10" class="pa-0 pt-10 d-flex flex-column">
+    <v-col offset="1" cols="10" class="pa-0 pt-10 pb-10 d-flex flex-column">
       <v-breadcrumbs
         class="pa-0"
         :items="items"
@@ -35,6 +35,11 @@
             mdi-delete
           </v-icon>
         </v-btn>
+        <v-switch
+          v-model="product.active"
+          style="position: absolute;top:0px;left:40px;z-index: 100"
+          :label="product.active ? 'Ativo' : 'Inativo'"
+        ></v-switch>
         <v-row no-gutters class="d-flex justify-space-between pt-5">
           <v-col cols="6" class="pa-0 pr-10">
             <v-form v-model="isFormValid" @submit.prevent>
@@ -152,7 +157,8 @@ export default {
         description: "",
         price: 0,
         image: null,
-        category: null
+        category: null,
+        active: false
       },
       oldName: "",
       items: [
@@ -174,13 +180,11 @@ export default {
   methods: {
     getCategories() {
       bardemu.get('/categories').then((res) => {
-        console.log(res)
         const data = res.data
         data.filter((category) => {
           this.categories.push(category.name)
         })
       }).catch((e) => {
-        console.log(e.response)
         if(e.response && e.response.data) {
           log.error('Erro ao consultar categorias ' + JSON.stringify(e.response.data))
           this.$store.dispatch('openAlert', {
@@ -191,9 +195,9 @@ export default {
       })
     },
     createProduct() {
-      console.log(this.product)
       bardemu.post('/product', this.product, {
         headers: {
+          "x-user-id": this.$store.state.userId,
           "x-access-token": this.$store.state.token
         }
       }).then((res) => {
@@ -215,11 +219,13 @@ export default {
       }))
     },
     updateProduct() {
+      console.log(this.product)
       bardemu.put('/product', this.product, {
         params: {
           _id: this.id
         },
         headers: {
+          "x-user-id": this.$store.state.userId,
           "x-access-token": this.$store.state.token
         }
       }).then((res) => {
@@ -276,6 +282,7 @@ export default {
                 _id: this.product._id
               },
               headers: {
+                "x-user-id": this.$store.state.userId,
                 "x-access-token": this.$store.state.token
               }
             }).then((res) => {
@@ -329,10 +336,10 @@ export default {
 
 .page-title {
   color: #fff;
-  font-family: 'Kaushan Script', sans-serif;
+  font-family: 'Poppins', sans-serif;
   letter-spacing: 4px;
   font-weight: bold;
-  font-size: 3em;
+  font-size: 2.2em;
   text-shadow: 1px 1px 3px black!important;
 }
 </style>

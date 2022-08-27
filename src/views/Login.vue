@@ -87,6 +87,7 @@ export default {
       }).then((res) => {
         console.log(res)
         this.$store.commit('setToken', res.data.token)
+        this.$store.commit('setUserId', res.data._id)
         this.handlingh = false
         this.$router.push('/home')
       }).catch((e) => {

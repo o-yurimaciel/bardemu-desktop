@@ -11,22 +11,21 @@ export default function receipt(text) {
       const doc = new jsPDF({
         orientation: 'portrait'
       });
-      console.log(text)
       doc.text(`
         BarDeMu Lanches
-
+        
         Pedido "${text._id}"
         ${new Date().toLocaleDateString()} - ${format(new Date(text.createdAt), 'HH:mm')}
         
         Código de entrega: ${text.deliveryId}
-
+        
         Nome: ${text.clientName}
         Telefone: ${text.clientPhone}
-        Endereço: ${text.clientAddress}, ${text.clientAddressNumber} ${text.clientAddressComp ? `Comp: ${text.clientAddressComp}` : ''}
+        Endereço: ${text.clientAddress}, ${text.clientAddressNumber} ${text.clientAddressData ? `Comp: ${text.clientAddressData}` : ''}
         Tipo de Pagamento: ${text.paymentType} ${text.cardFlag ? `
-        Bandeira: ${text.cardFlag}` : ''}
+        Bandeira: ${text.cardFlag}` : ''}${text.coupon ? `Cupom de desconto: ${text.coupon}` : ''}
         __________________________________________________
-
+        
         ${text.products.map((product) => {
         if(product) {
         const productLine = `${product.quantity}x ${product.name} R$${formatBRL(product.price)}${product.note && product.note.length > 0 ? `
@@ -38,7 +37,8 @@ export default function receipt(text) {
         
         __________________________________________________
 
-        Entrega: R$${formatBRL(text.deliveryPrice)}
+        Entrega: R$${formatBRL(text.deliveryPrice ? text.deliveryPrice : 0)}
+        Desconto: R$${formatBRL(text.discountValue ? text.discountValue : 0)}
         Total a pagar: R$${formatBRL(text.totalValue)}
         ${text.paymentType === 'Dinheiro' ? `Troco: R$${formatBRL(text.cashChange)}` : ''}
       `, 10, 10)

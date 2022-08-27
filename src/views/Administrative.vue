@@ -1,6 +1,6 @@
 <template>
   <v-app class="wrapper-adm">
-    <v-col offset="1" cols="10" class="pa-0 pt-10">
+    <v-col offset="1" cols="10" class="pa-0 pt-10 pb-10">
       <v-row no-gutters class="d-flex justify-space-between">
         <v-col cols="12" class="pa-0 d-flex flex-column">
           <v-breadcrumbs

@@ -91,7 +91,6 @@ export default {
       })
     },
     getDistrictList() {
-      console.log('get districts')
       bardemu.get('/districts', {
         headers: {
           "x-access-token": this.$store.state.token
@@ -127,6 +126,7 @@ export default {
               _id: id
             },
             headers: {
+              "x-user-id": this.$store.state.userId,
               "x-access-token": this.$store.state.token
             }
           }).then((res) => {
@@ -200,10 +200,10 @@ h1 {
 
 .page-title {
   color: #fff;
-  font-family: 'Kaushan Script', sans-serif;
+  font-family: 'Poppins', sans-serif;
   letter-spacing: 4px;
   font-weight: bold;
-  font-size: 3em;
+  font-size: 2.2em;
   text-shadow: 1px 1px 3px black!important;
 }
 </style>
