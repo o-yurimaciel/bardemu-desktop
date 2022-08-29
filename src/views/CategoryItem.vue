@@ -37,6 +37,7 @@
                 <v-text-field
                 outlined
                 label="Nome"
+                :error="!category.name"
                 autofocus
                 color="var(--primary-color)"
                 v-model="category.name"
@@ -47,6 +48,7 @@
               <v-col class="pa-0">
                 <v-text-field
                 label="Ordem"
+                :error="!category.order"
                 outlined
                 color="var(--primary-color)"
                 v-model="category.order"
@@ -63,6 +65,7 @@
       <v-btn
       color="green"
       :outlined="false"
+      :disabled="!isFormValid"
       @click="edit? updateCategory() : createCategory()"
       >
         <span style="color: #fff">{{edit ? 'Atualizar' : 'Criar'}}</span>

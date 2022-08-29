@@ -49,7 +49,7 @@ export default {
       ],
       elements: [
         { icon: 'mdi-account-group', title: "Clientes", description: "Veja a lista de clientes cadastrados.", to: '/clients'},
-        { icon: 'mdi-comment-quote', title: "Avaliações", description: "Veja a lista de avaliações.", to: '/feedbacks'},
+        { icon: 'mdi-comment-quote', title: "Avaliações", description: "Veja a lista de avaliações e controle quais aparecem no site.", to: '/feedbacks'},
       ]
     }
   },

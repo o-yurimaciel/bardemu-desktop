@@ -51,6 +51,7 @@
                 color="var(--primary-color)"
                 :value="product.category"
                 v-model="product.category"
+                :error="!product.category"
                 id="category"
                 >
                 </v-select>
@@ -61,6 +62,7 @@
                 color="var(--primary-color)"
                 label="Nome"
                 v-model="product.name"
+                :error="!product.name"
                 id="name"
                 >
                 </v-text-field>
@@ -78,6 +80,7 @@
               <v-col class="pa-0">
                 <v-currency-field
                 v-model="product.price"
+                :error="!product.price"
                 outlined
                 color="var(--primary-color)"
                 label="Preço"
@@ -89,6 +92,7 @@
                 <v-file-input
                   truncate-length="15"
                   label="Foto"
+                  :error="!product.image"
                   color="var(--primary-color)"
                   @change="changeFile"
                 ></v-file-input>
@@ -97,6 +101,7 @@
                 <v-btn
                 color="green"
                 :outlined="false"
+                :disabled="!isFormValid"
                 @click="edit? updateProduct() : createProduct()"
                 >
                   <span style="color: #fff">{{edit ? 'Atualizar' : 'Criar'}}</span>

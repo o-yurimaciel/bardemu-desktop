@@ -67,9 +67,15 @@
                 <v-text-field
                 label="Desconto (%)"
                 outlined
+                suffix="%"
+                type="number"
+                min="1"
+                max="100"
+                :rules="[rules.percent]"
                 color="var(--primary-color)"
                 v-model="coupon.percent"
                 :error="!coupon.percent"
+                v-mask="'###'"
                 id="order"
                 >
                 </v-text-field>
@@ -83,7 +89,8 @@
       <v-btn
       color="green"
       :outlined="false"
-      @click="edit? updateCoupon() : createCoupon()"
+      :disabled="!isFormValid"
+      @click="edit ? updateCoupon() : createCoupon()"
       >
         <span style="color: #fff">{{edit ? 'Atualizar' : 'Criar'}}</span>
       </v-btn>
@@ -116,7 +123,16 @@ export default {
         { name: "Pedido", value: "orderValue" },
         { name: "Entrega", value: "deliveryPrice" },
         { name: "Total a pagar", value: "totalValue" },
-      ]
+      ],
+      rules: {
+        percent: value => {
+          if(value > 0 && value <= 100) {
+            return true
+          } else {
+            return "Valor de porcentagem inválido (1 a 100)"
+          }
+        }
+      }
     }
   },
   mounted() {

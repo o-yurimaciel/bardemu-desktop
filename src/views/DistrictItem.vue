@@ -32,6 +32,7 @@
                 <v-text-field
                 outlined
                 label="Nome"
+                :error="!district.name"
                 autofocus
                 color="var(--primary-color)"
                 v-model="district.name"
@@ -42,6 +43,7 @@
               <v-col class="pa-0">
                 <v-currency-field
                 v-model="district.price"
+                :error="!district.price"
                 outlined
                 color="var(--primary-color)"
                 label="Preço"
@@ -58,6 +60,7 @@
       <v-btn
       color="green"
       :outlined="false"
+      :disabled="!isFormValid"
       @click="edit? updateDistrict() : createDistrict()"
       >
         <span style="color: #fff">{{edit ? 'Atualizar' : 'Criar'}}</span>
