@@ -37,6 +37,11 @@
           </div>
           <v-col class="pa-0 d-flex justify-center">
             <span class="orderStatus text-center">
+              Pedido #{{order.orderNumber}}
+            </span>
+          </v-col>
+          <v-col class="pa-0 d-flex justify-center pb-lg-10 pb-4">
+            <span class="orderStatus text-center">
               {{ formatStatus(order.orderStatus) }}
             </span>
           </v-col>
@@ -332,17 +337,19 @@ export default {
       return new Date(date).toLocaleDateString().concat(" ").concat(format(new Date(date), "HH:mm:ss"))
     },
     formatStatus(status) {
-      switch(status) {
-        case orderHistoryStatusOptions.PENDING:
-          return "Pedido aguardando confirmação"
-        case orderHistoryStatusOptions.CONFIRMED:
-          return "O pedido está sendo preparado e logo sairá para entrega"
-        case orderHistoryStatusOptions.OUT_FOR_DELIVERY:
-          return "O pedido saiu para entrega"
-        case orderHistoryStatusOptions.DELIVERED:
-          return "O pedido foi entregue"
-        case orderHistoryStatusOptions.CANCELLED:
-          return "O pedido foi cancelado"
+      if(status) {
+        switch(status) {
+          case orderHistoryStatusOptions.PENDING:
+            return "Pedido aguardando confirmação"
+          case orderHistoryStatusOptions.CONFIRMED:
+            return "O pedido está sendo preparado e logo sairá para entrega"
+          case orderHistoryStatusOptions.OUT_FOR_DELIVERY:
+            return "O pedido saiu para entrega"
+          case orderHistoryStatusOptions.DELIVERED:
+            return "O pedido foi entregue. Obrigado!"
+          case orderHistoryStatusOptions.CANCELLED:
+            return "O pedido foi cancelado"
+        }
       }
     },
     formatStatusHistory(status) {

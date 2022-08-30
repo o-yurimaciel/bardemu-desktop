@@ -40,6 +40,7 @@
         >
         <template v-slot:item="{ item }">
           <tr @click="openOrder(item)" style="cursor: pointer">
+            <td>#{{item.orderNumber}}</td>
             <td>{{new Date(item.createdAt).toLocaleDateString()}}</td>
             <td>{{formatHour(item.createdAt)}}</td>
             <td>{{item.clientName}}</td>
@@ -77,6 +78,13 @@ export default {
         { text: 'Home', to: '/home' }
       ],
       headers: [
+        {
+          text: 'Pedido',
+          align: 'center',
+          value: 'orderNumber',
+          sortable: false,
+          filterable: false
+        },
         {
           text: 'Data',
           align: 'center',

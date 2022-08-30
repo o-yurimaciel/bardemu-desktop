@@ -14,7 +14,7 @@ export default function receipt(text) {
       doc.text(`
         BarDeMu Lanches
         
-        Pedido "${text._id}"
+        Pedido #${text.orderNumber}
         ${new Date().toLocaleDateString()} - ${format(new Date(text.createdAt), 'HH:mm')}
         
         Código de entrega: ${text.deliveryId}
